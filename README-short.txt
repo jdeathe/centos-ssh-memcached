@@ -1,0 +1,1 @@
+CentOS-6 6.8 x86_64 - Memcached.

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+MEMCACHED=/usr/bin/memcached
+NICE=/bin/nice
+
+DAEMON_OPTS="
+ -u memcached
+ -p 11211
+ -m ${MEMCACHED_CACHESIZE:-64}
+ -c ${MEMCACHED_MAXCONN:-1024}
+ ${MEMCACHED_OPTIONS}
+"
+
+NICENESS=${MEMCACHED_NICENESS:-0}
+
+printf -- \
+	"Starting Memcached: \n%s\n" \
+	"${DAEMON_OPTS}"
+
+exec ${NICE} \
+	-n ${NICENESS} \
+	${MEMCACHED} \
+	${DAEMON_OPTS}
