@@ -3,7 +3,7 @@
 #
 # CentOS-6, Memcached 1.4.
 # =============================================================================
-FROM jdeathe/centos-ssh:1.7.3
+FROM jdeathe/centos-ssh:1.7.6
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
