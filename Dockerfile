@@ -3,13 +3,15 @@
 #
 # CentOS-6, Memcached 1.4.
 # =============================================================================
-FROM jdeathe/centos-ssh:centos-6-1.7.3
+FROM jdeathe/centos-ssh:1.7.3
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
 RUN rpm --rebuilddb \
-	&& yum --setopt=tsflags=nodocs -y install \
-		memcached-1.4.4-3.el6 \
+	&& yum -y install \
+			--setopt=tsflags=nodocs \
+			--disableplugin=fastestmirror \
+		memcached-1.4.4-5.el6 \
 	&& yum versionlock add \
 		memcached* \
 	&& rm -rf /var/cache/yum/* \
