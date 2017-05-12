@@ -12,6 +12,7 @@ CentOS-6 6.8 x86_64 - Memcached 1.4.
 - Update memcached package to `memcached-1.4.4-5.el6`.
 - Adds a change log (`CHANGELOG.md`).
 - Adds support for semantic version numbered tags.
+- Adds minor code style changes to the Makefile for readability.
 
 ### 1.0.0 - 2016-11-23
 
