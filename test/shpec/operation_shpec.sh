@@ -71,7 +71,7 @@ function test_basic_operations ()
 			memcached.pool-1.1.1 \
 		&> /dev/null
 
-		it "Runs a Memecached container named memcached.pool-1.1.1 on port ${DOCKER_PORT_MAP_TCP_11211}."
+		it "Runs a Memcached container named memcached.pool-1.1.1 on port ${DOCKER_PORT_MAP_TCP_11211}."
 			docker run \
 				--detach \
 				--name memcached.pool-1.1.1 \
@@ -96,6 +96,20 @@ function test_basic_operations ()
 					"${container_port_11211}" \
 					"${DOCKER_PORT_MAP_TCP_11211}"
 			fi
+		end
+
+		sleep ${BOOTSTRAP_BACKOFF_TIME}
+
+		it "Responds to the Memcached stats command."
+			expect test/telnet-memcached.exp \
+				127.0.0.1 \
+				${container_port_11211} \
+				"stats" \
+			| grep -qE '^STAT uptime [0-9]+'
+
+			assert equal \
+				"${?}" \
+				0
 		end
 
 		__terminate_container \
