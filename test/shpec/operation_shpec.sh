@@ -60,6 +60,7 @@ function __terminate_container ()
 function test_basic_operations ()
 {
 	local container_port_11211=""
+	local maxbytes_value=""
 
 	trap "__terminate_container memcached.pool-1.1.1 &> /dev/null; \
 		__destroy; \
@@ -110,6 +111,21 @@ function test_basic_operations ()
 			assert equal \
 				"${?}" \
 				0
+		end
+
+		it "Defaults to a maxbytes setting of 64M."
+			maxbytes_value="$(
+				expect test/telnet-memcached.exp \
+					127.0.0.1 \
+					${container_port_11211} \
+					"stats settings" \
+				| grep -E '^STAT maxbytes [0-9]+' \
+				| awk '{ print $3; }'
+			)"
+
+			assert __shpec_matcher_egrep \
+				"${maxbytes_value}" \
+				67108864
 		end
 
 		__terminate_container \
