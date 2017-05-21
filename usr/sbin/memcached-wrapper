@@ -14,7 +14,7 @@ DAEMON_OPTS="
 NICENESS=${MEMCACHED_NICENESS:-0}
 
 printf -- \
-	"Starting Memcached: \n%s\n" \
+	"Starting Memcached: %s" \
 	"${DAEMON_OPTS}"
 
 exec ${NICE} \
