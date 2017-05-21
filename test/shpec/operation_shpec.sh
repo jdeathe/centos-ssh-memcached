@@ -120,12 +120,29 @@ function test_basic_operations ()
 					${container_port_11211} \
 					"stats settings" \
 				| grep -E '^STAT maxbytes [0-9]+' \
-				| awk '{ print $3; }'
+				| awk '{ print $3; }' \
+				| tr -d '\r'
 			)"
 
-			assert __shpec_matcher_egrep \
+			assert equal \
 				"${maxbytes_value}" \
 				67108864
+		end
+
+		it "Defaults to a maxconns setting of 1024."
+			maxconns_value="$(
+				expect test/telnet-memcached.exp \
+					127.0.0.1 \
+					${container_port_11211} \
+					"stats settings" \
+				| grep -E '^STAT maxconns [0-9]+' \
+				| awk '{ print $3; }' \
+				| tr -d '\r'
+			)"
+
+			assert equal \
+				"${maxconns_value}" \
+				1024
 		end
 
 		__terminate_container \
