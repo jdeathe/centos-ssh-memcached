@@ -145,6 +145,22 @@ function test_basic_operations ()
 				1024
 		end
 
+		it "Defaults to TCP only (i.e udpport setting of 0)."
+			udpport_value="$(
+				expect test/telnet-memcached.exp \
+					127.0.0.1 \
+					${container_port_11211} \
+					"stats settings" \
+				| grep -E '^STAT udpport [0-9]+' \
+				| awk '{ print $3; }' \
+				| tr -d '\r'
+			)"
+
+			assert equal \
+				"${udpport_value}" \
+				0
+		end
+
 		__terminate_container \
 			memcached.pool-1.1.1 \
 		&> /dev/null
