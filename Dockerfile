@@ -3,7 +3,7 @@
 #
 # CentOS-6, Memcached 1.4.
 # =============================================================================
-FROM jdeathe/centos-ssh:1.7.3
+FROM jdeathe/centos-ssh:1.7.6
 
 MAINTAINER James Deathe <james.deathe@gmail.com>
 
@@ -55,23 +55,23 @@ LABEL \
 --rm \
 --privileged \
 --volume /:/media/root \
-jdeathe/centos-ssh-memcached:centos-6-${RELEASE_VERSION} \
+jdeathe/centos-ssh-memcached:${RELEASE_VERSION} \
 /usr/sbin/scmi install \
 --chroot=/media/root \
 --name=\${NAME} \
---tag=centos-6-${RELEASE_VERSION}" \
+--tag=${RELEASE_VERSION}" \
 	uninstall="docker run \
 --rm \
 --privileged \
 --volume /:/media/root \
-jdeathe/centos-ssh-memcached:centos-6-${RELEASE_VERSION} \
+jdeathe/centos-ssh-memcached:${RELEASE_VERSION} \
 /usr/sbin/scmi uninstall \
 --chroot=/media/root \
 --name=\${NAME} \
---tag=centos-6-${RELEASE_VERSION}" \
+--tag=${RELEASE_VERSION}" \
 	org.deathe.name="centos-ssh-memcached" \
 	org.deathe.version="${RELEASE_VERSION}" \
-	org.deathe.release="jdeathe/centos-ssh-memcached:centos-6-${RELEASE_VERSION}" \
+	org.deathe.release="jdeathe/centos-ssh-memcached:${RELEASE_VERSION}" \
 	org.deathe.license="MIT" \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-memcached" \
