@@ -5,8 +5,6 @@
 # =============================================================================
 FROM jdeathe/centos-ssh:1.7.6
 
-MAINTAINER James Deathe <james.deathe@gmail.com>
-
 RUN rpm --rebuilddb \
 	&& yum -y install \
 			--setopt=tsflags=nodocs \
@@ -51,6 +49,7 @@ ENV MEMCACHED_CACHESIZE="64" \
 # -----------------------------------------------------------------------------
 ARG RELEASE_VERSION="1.0.0"
 LABEL \
+	maintainer="James Deathe <james.deathe@gmail.com>" \
 	install="docker run \
 --rm \
 --privileged \

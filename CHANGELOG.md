@@ -15,6 +15,7 @@ CentOS-6 6.8 x86_64 - Memcached 1.4.
 - Adds minor code style changes to the Makefile for readability.
 - Adds support for running `shpec` functional tests with `make test`.
 - Adds correct spelling of Memcached in log file path: `/var/log/memcached.log`.
+- Replaces deprecated Dockerfile `MAINTAINER` with a `LABEL`.
 
 ### 1.0.0 - 2016-11-23
 
