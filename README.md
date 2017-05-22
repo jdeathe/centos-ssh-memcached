@@ -65,7 +65,9 @@ In the following example the memcached service is bound to port 11211 of the doc
 ```
 $ docker stop memcached.pool-1.1.1 && \
   docker rm memcached.pool-1.1.1
-$ docker run -d -t \
+$ docker run \
+  --detach \
+  --tty \
   --name memcached.pool-1.1.1 \
   --publish 11211:11211/tcp \
   --env "MEMCACHED_CACHESIZE=32" \
