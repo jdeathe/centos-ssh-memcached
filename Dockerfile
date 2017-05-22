@@ -47,7 +47,7 @@ ENV MEMCACHED_CACHESIZE="64" \
 # -----------------------------------------------------------------------------
 # Set image metadata
 # -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="1.0.0"
+ARG RELEASE_VERSION="1.0.1"
 LABEL \
 	maintainer="James Deathe <james.deathe@gmail.com>" \
 	install="docker run \
