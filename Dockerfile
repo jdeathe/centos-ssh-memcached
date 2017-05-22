@@ -3,13 +3,13 @@
 #
 # CentOS-6, Memcached 1.4.
 # =============================================================================
-FROM jdeathe/centos-ssh:centos-6-1.7.3
-
-MAINTAINER James Deathe <james.deathe@gmail.com>
+FROM jdeathe/centos-ssh:1.7.6
 
 RUN rpm --rebuilddb \
-	&& yum --setopt=tsflags=nodocs -y install \
-		memcached-1.4.4-3.el6 \
+	&& yum -y install \
+			--setopt=tsflags=nodocs \
+			--disableplugin=fastestmirror \
+		memcached-1.4.4-5.el6 \
 	&& yum versionlock add \
 		memcached* \
 	&& rm -rf /var/cache/yum/* \
@@ -47,29 +47,30 @@ ENV MEMCACHED_CACHESIZE="64" \
 # -----------------------------------------------------------------------------
 # Set image metadata
 # -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="1.0.0"
+ARG RELEASE_VERSION="1.0.1"
 LABEL \
+	maintainer="James Deathe <james.deathe@gmail.com>" \
 	install="docker run \
 --rm \
 --privileged \
 --volume /:/media/root \
-jdeathe/centos-ssh-memcached:centos-6-${RELEASE_VERSION} \
+jdeathe/centos-ssh-memcached:${RELEASE_VERSION} \
 /usr/sbin/scmi install \
 --chroot=/media/root \
 --name=\${NAME} \
---tag=centos-6-${RELEASE_VERSION}" \
+--tag=${RELEASE_VERSION}" \
 	uninstall="docker run \
 --rm \
 --privileged \
 --volume /:/media/root \
-jdeathe/centos-ssh-memcached:centos-6-${RELEASE_VERSION} \
+jdeathe/centos-ssh-memcached:${RELEASE_VERSION} \
 /usr/sbin/scmi uninstall \
 --chroot=/media/root \
 --name=\${NAME} \
---tag=centos-6-${RELEASE_VERSION}" \
+--tag=${RELEASE_VERSION}" \
 	org.deathe.name="centos-ssh-memcached" \
 	org.deathe.version="${RELEASE_VERSION}" \
-	org.deathe.release="jdeathe/centos-ssh-memcached:centos-6-${RELEASE_VERSION}" \
+	org.deathe.release="jdeathe/centos-ssh-memcached:${RELEASE_VERSION}" \
 	org.deathe.license="MIT" \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-memcached" \
