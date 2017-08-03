@@ -18,7 +18,7 @@ RUN rpm --rebuilddb \
 # -----------------------------------------------------------------------------
 # Copy files into place
 # -----------------------------------------------------------------------------
-ADD usr/sbin/memcached-wrapper \
+ADD usr/sbin \
 	/usr/sbin/
 ADD opt/scmi \
 	/opt/scmi/
