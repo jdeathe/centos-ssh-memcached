@@ -3,7 +3,7 @@
 #
 # CentOS-6, Memcached 1.4.
 # =============================================================================
-FROM jdeathe/centos-ssh:1.7.6
+FROM jdeathe/centos-ssh:1.8.1
 
 RUN rpm --rebuilddb \
 	&& yum -y install \
@@ -74,6 +74,6 @@ jdeathe/centos-ssh-memcached:${RELEASE_VERSION} \
 	org.deathe.license="MIT" \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-memcached" \
-	org.deathe.description="CentOS-6 6.8 x86_64 - Memcached 1.4."
+	org.deathe.description="CentOS-6 6.9 x86_64 - Memcached 1.4."
 
 CMD ["/usr/bin/supervisord", "--configuration=/etc/supervisord.conf"]
