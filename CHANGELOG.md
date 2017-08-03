@@ -6,6 +6,10 @@ Summary of release changes for Version 1.
 
 CentOS-6 6.8 x86_64 - Memcached 1.4.
 
+### 1.2.0 - Unreleased
+
+- Fixes issue with expect script failure when using `expect -f`.
+
 ### 1.0.1 - 2017-05-22
 
 - Adds source from [jdeathe/centos-ssh:1.7.6](https://github.com/jdeathe/centos-ssh/releases/tag/1.7.6)
