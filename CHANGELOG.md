@@ -9,6 +9,7 @@ CentOS-6 6.8 x86_64 - Memcached 1.4.
 ### 1.2.0 - Unreleased
 
 - Fixes issue with expect script failure when using `expect -f`.
+- Adds `SHPEC_ROOT` variable to Makefile.
 
 ### 1.0.1 - 2017-05-22
 
