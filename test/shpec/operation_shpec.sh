@@ -1,4 +1,4 @@
-readonly BOOTSTRAP_BACKOFF_TIME=3
+readonly STARTUP_TIME=1
 readonly TEST_DIRECTORY="test"
 
 # These should ideally be a static value but hosts might be using this port so 
@@ -9,6 +9,60 @@ DOCKER_PORT_MAP_TCP_11211="${DOCKER_PORT_MAP_TCP_11211:-11211}"
 function __destroy ()
 {
 	:
+}
+
+function __get_container_port ()
+{
+	local container="${1:-}"
+	local port="${2:-}"
+	local value=""
+
+	value="$(
+		docker port \
+			${container} \
+			${port}
+	)"
+	value=${value##*:}
+
+	printf -- \
+		'%s' \
+		"${value}"
+}
+
+# container - Docker container name.
+# counter - Timeout counter in seconds.
+# process_pattern - Regular expression pattern used to match running process.
+function __is_container_ready ()
+{
+	local container="${1:-}"
+	local counter=$(
+		awk \
+			-v seconds="${2:-10}" \
+			'BEGIN { print 10 * seconds; }'
+	)
+	local process_pattern="${3:-}"
+
+	until (( counter == 0 )); do
+		sleep 0.1
+
+		if docker exec ${container} \
+			bash -c "ps axo command \
+				| grep -qE \"${process_pattern}\" \
+				&& memcached-tool 127.0.0.1:11211 stats \
+				| grep -qP '[ ]+accepting_conns[ ]+1[^0-9]*$'" \
+			&> /dev/null
+		then
+			break
+		fi
+
+		(( counter -= 1 ))
+	done
+
+	if (( counter == 0 )); then
+		return 1
+	fi
+
+	return 0
 }
 
 function __setup ()
@@ -83,11 +137,10 @@ function test_basic_operations ()
 			&> /dev/null
 
 			container_port_11211="$(
-				docker port \
+				__get_container_port \
 					memcached.pool-1.1.1 \
 					11211/tcp
 			)"
-			container_port_11211=${container_port_11211##*:}
 
 			if [[ ${DOCKER_PORT_MAP_TCP_11211} == 0 ]] \
 				|| [[ -z ${DOCKER_PORT_MAP_TCP_11211} ]]; then
@@ -101,7 +154,13 @@ function test_basic_operations ()
 			fi
 		end
 
-		sleep ${BOOTSTRAP_BACKOFF_TIME}
+		if ! __is_container_ready \
+			memcached.pool-1.1.1 \
+			${STARTUP_TIME} \
+			"/usr/bin/memcached "
+		then
+			exit 1
+		fi
 
 		it "Responds to the Memcached stats command."
 			expect test/telnet-memcached.exp \
@@ -202,11 +261,10 @@ function test_custom_configuration ()
 			&> /dev/null
 
 			container_port_11211="$(
-				docker port \
+				__get_container_port \
 					memcached.pool-1.1.1 \
 					11211/tcp
 			)"
-			container_port_11211=${container_port_11211##*:}
 
 			if [[ ${DOCKER_PORT_MAP_TCP_11211} == 0 ]] \
 				|| [[ -z ${DOCKER_PORT_MAP_TCP_11211} ]]; then
@@ -220,7 +278,13 @@ function test_custom_configuration ()
 			fi
 		end
 
-		sleep ${BOOTSTRAP_BACKOFF_TIME}
+		if ! __is_container_ready \
+			memcached.pool-1.1.1 \
+			${STARTUP_TIME} \
+			"/usr/bin/memcached "
+		then
+			exit 1
+		fi
 
 		it "Responds to the Memcached stats command."
 			expect test/telnet-memcached.exp \
