@@ -46,7 +46,7 @@ After=docker.service
 
 [Service]
 Restart=on-failure
-RestartSec=10
+RestartSec=8
 TimeoutStartSec=1200
 Environment="DOCKER_USER=jdeathe"
 Environment="DOCKER_CONTAINER_OPTS="
