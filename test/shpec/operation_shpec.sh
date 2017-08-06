@@ -115,9 +115,7 @@ function __terminate_container ()
 function test_basic_operations ()
 {
 	local container_port_11211=""
-	local maxbytes_value=""
-	local maxconns_value=""
-	local udpport_value=""
+	local settings_value=""
 
 	trap "__terminate_container memcached.pool-1.1.1 &> /dev/null; \
 		__destroy; \
@@ -125,34 +123,36 @@ function test_basic_operations ()
 		INT TERM EXIT
 
 	describe "Basic Memcached operations"
-		__terminate_container \
-			memcached.pool-1.1.1 \
-		&> /dev/null
-
-		it "Runs a Memcached container named memcached.pool-1.1.1 on port ${DOCKER_PORT_MAP_TCP_11211}."
-			docker run \
-				--detach \
-				--name memcached.pool-1.1.1 \
-				--publish ${DOCKER_PORT_MAP_TCP_11211}:11211 \
-				jdeathe/centos-ssh-memcached:latest \
+		describe "Runs named container"
+			__terminate_container \
+				memcached.pool-1.1.1 \
 			&> /dev/null
 
-			container_port_11211="$(
-				__get_container_port \
-					memcached.pool-1.1.1 \
-					11211/tcp
-			)"
+			it "Can publish ${DOCKER_PORT_MAP_TCP_11211}:11211."
+				docker run \
+					--detach \
+					--name memcached.pool-1.1.1 \
+					--publish ${DOCKER_PORT_MAP_TCP_11211}:11211 \
+					jdeathe/centos-ssh-memcached:latest \
+				&> /dev/null
 
-			if [[ ${DOCKER_PORT_MAP_TCP_11211} == 0 ]] \
-				|| [[ -z ${DOCKER_PORT_MAP_TCP_11211} ]]; then
-				assert gt \
-					"${container_port_11211}" \
-					"30000"
-			else
-				assert equal \
-					"${container_port_11211}" \
-					"${DOCKER_PORT_MAP_TCP_11211}"
-			fi
+				container_port_11211="$(
+					__get_container_port \
+						memcached.pool-1.1.1 \
+						11211/tcp
+				)"
+
+				if [[ ${DOCKER_PORT_MAP_TCP_11211} == 0 ]] \
+					|| [[ -z ${DOCKER_PORT_MAP_TCP_11211} ]]; then
+					assert gt \
+						"${container_port_11211}" \
+						"30000"
+				else
+					assert equal \
+						"${container_port_11211}" \
+						"${DOCKER_PORT_MAP_TCP_11211}"
+				fi
+			end
 		end
 
 		if ! __is_container_ready \
@@ -168,64 +168,54 @@ function test_basic_operations ()
 			exit 1
 		fi
 
-		it "Responds to the Memcached stats command."
-			expect test/telnet-memcached.exp \
-				127.0.0.1 \
-				${container_port_11211} \
-				"stats" \
-			| grep -qE '^STAT uptime [0-9]+'
+		describe "Default initialisation"
+			it "Sets maxbytes=67108864."
+				settings_value="$(
+					expect test/telnet-memcached.exp \
+						127.0.0.1 \
+						${container_port_11211} \
+						"stats settings" \
+					| grep -E '^STAT maxbytes [0-9]+' \
+					| awk '{ print $3; }' \
+					| tr -d '\r'
+				)"
 
-			assert equal \
-				"${?}" \
-				0
-		end
+				assert equal \
+					"${settings_value}" \
+					67108864
+			end
 
-		it "Defaults to a maxbytes setting of 64M."
-			maxbytes_value="$(
-				expect test/telnet-memcached.exp \
-					127.0.0.1 \
-					${container_port_11211} \
-					"stats settings" \
-				| grep -E '^STAT maxbytes [0-9]+' \
-				| awk '{ print $3; }' \
-				| tr -d '\r'
-			)"
+			it "Sets maxconns=1024."
+				settings_value="$(
+					expect test/telnet-memcached.exp \
+						127.0.0.1 \
+						${container_port_11211} \
+						"stats settings" \
+					| grep -E '^STAT maxconns [0-9]+' \
+					| awk '{ print $3; }' \
+					| tr -d '\r'
+				)"
 
-			assert equal \
-				"${maxbytes_value}" \
-				67108864
-		end
+				assert equal \
+					"${settings_value}" \
+					1024
+			end
 
-		it "Defaults to a maxconns setting of 1024."
-			maxconns_value="$(
-				expect test/telnet-memcached.exp \
-					127.0.0.1 \
-					${container_port_11211} \
-					"stats settings" \
-				| grep -E '^STAT maxconns [0-9]+' \
-				| awk '{ print $3; }' \
-				| tr -d '\r'
-			)"
+			it "Sets udpport=0."
+				settings_value="$(
+					expect test/telnet-memcached.exp \
+						127.0.0.1 \
+						${container_port_11211} \
+						"stats settings" \
+					| grep -E '^STAT udpport [0-9]+' \
+					| awk '{ print $3; }' \
+					| tr -d '\r'
+				)"
 
-			assert equal \
-				"${maxconns_value}" \
-				1024
-		end
-
-		it "Defaults to TCP only (i.e udpport setting of 0)."
-			udpport_value="$(
-				expect test/telnet-memcached.exp \
-					127.0.0.1 \
-					${container_port_11211} \
-					"stats settings" \
-				| grep -E '^STAT udpport [0-9]+' \
-				| awk '{ print $3; }' \
-				| tr -d '\r'
-			)"
-
-			assert equal \
-				"${udpport_value}" \
-				0
+				assert equal \
+					"${settings_value}" \
+					0
+			end
 		end
 
 		__terminate_container \
@@ -240,10 +230,7 @@ function test_basic_operations ()
 function test_custom_configuration ()
 {
 	local container_port_11211=""
-	local item_size_max_value=""
-	local maxbytes_value=""
-	local maxconns_value=""
-	local udpport_value=""
+	local settings_value=""
 
 	trap "__terminate_container memcached.pool-1.1.1 &> /dev/null; \
 		__destroy; \
@@ -251,37 +238,39 @@ function test_custom_configuration ()
 		INT TERM EXIT
 
 	describe "Customised Memcached configuration"
-		__terminate_container \
-			memcached.pool-1.1.1 \
-		&> /dev/null
-
-		it "Runs a Memcached container named memcached.pool-1.1.1 on port ${DOCKER_PORT_MAP_TCP_11211}."
-			docker run \
-				--detach \
-				--name memcached.pool-1.1.1 \
-				--publish ${DOCKER_PORT_MAP_TCP_11211}:11211 \
-				--env "MEMCACHED_CACHESIZE=32" \
-				--env "MEMCACHED_MAXCONN=2048" \
-				--env "MEMCACHED_OPTIONS=-U 0 -I 8M" \
-				jdeathe/centos-ssh-memcached:latest \
+		describe "Runs named container"
+			__terminate_container \
+				memcached.pool-1.1.1 \
 			&> /dev/null
 
-			container_port_11211="$(
-				__get_container_port \
-					memcached.pool-1.1.1 \
-					11211/tcp
-			)"
+			it "Can publish ${DOCKER_PORT_MAP_TCP_11211}:11211."
+				docker run \
+					--detach \
+					--name memcached.pool-1.1.1 \
+					--publish ${DOCKER_PORT_MAP_TCP_11211}:11211 \
+					--env "MEMCACHED_CACHESIZE=32" \
+					--env "MEMCACHED_MAXCONN=2048" \
+					--env "MEMCACHED_OPTIONS=-U 0 -I 2M" \
+					jdeathe/centos-ssh-memcached:latest \
+				&> /dev/null
 
-			if [[ ${DOCKER_PORT_MAP_TCP_11211} == 0 ]] \
-				|| [[ -z ${DOCKER_PORT_MAP_TCP_11211} ]]; then
-				assert gt \
-					"${container_port_11211}" \
-					"30000"
-			else
-				assert equal \
-					"${container_port_11211}" \
-					"${DOCKER_PORT_MAP_TCP_11211}"
-			fi
+				container_port_11211="$(
+					__get_container_port \
+						memcached.pool-1.1.1 \
+						11211/tcp
+				)"
+
+				if [[ ${DOCKER_PORT_MAP_TCP_11211} == 0 ]] \
+					|| [[ -z ${DOCKER_PORT_MAP_TCP_11211} ]]; then
+					assert gt \
+						"${container_port_11211}" \
+						"30000"
+				else
+					assert equal \
+						"${container_port_11211}" \
+						"${DOCKER_PORT_MAP_TCP_11211}"
+				fi
+			end
 		end
 
 		if ! __is_container_ready \
@@ -297,80 +286,70 @@ function test_custom_configuration ()
 			exit 1
 		fi
 
-		it "Responds to the Memcached stats command."
-			expect test/telnet-memcached.exp \
-				127.0.0.1 \
-				${container_port_11211} \
-				"stats" \
-			| grep -qE '^STAT uptime [0-9]+'
+		describe "Custom initialisation"
+			it "Sets maxbytes=33554432."
+				settings_value="$(
+					expect test/telnet-memcached.exp \
+						127.0.0.1 \
+						${container_port_11211} \
+						"stats settings" \
+					| grep -E '^STAT maxbytes [0-9]+' \
+					| awk '{ print $3; }' \
+					| tr -d '\r'
+				)"
 
-			assert equal \
-				"${?}" \
-				0
-		end
+				assert equal \
+					"${settings_value}" \
+					33554432
+			end
 
-		it "Runs with a maxbytes setting of 32M."
-			maxbytes_value="$(
-				expect test/telnet-memcached.exp \
-					127.0.0.1 \
-					${container_port_11211} \
-					"stats settings" \
-				| grep -E '^STAT maxbytes [0-9]+' \
-				| awk '{ print $3; }' \
-				| tr -d '\r'
-			)"
+			it "Sets maxconns=2048."
+				settings_value="$(
+					expect test/telnet-memcached.exp \
+						127.0.0.1 \
+						${container_port_11211} \
+						"stats settings" \
+					| grep -E '^STAT maxconns [0-9]+' \
+					| awk '{ print $3; }' \
+					| tr -d '\r'
+				)"
 
-			assert equal \
-				"${maxbytes_value}" \
-				33554432
-		end
+				assert equal \
+					"${settings_value}" \
+					2048
+			end
 
-		it "Runs with a maxconns setting of 2048."
-			maxconns_value="$(
-				expect test/telnet-memcached.exp \
-					127.0.0.1 \
-					${container_port_11211} \
-					"stats settings" \
-				| grep -E '^STAT maxconns [0-9]+' \
-				| awk '{ print $3; }' \
-				| tr -d '\r'
-			)"
+			it "Sets udpport=0."
+				settings_value="$(
+					expect test/telnet-memcached.exp \
+						127.0.0.1 \
+						${container_port_11211} \
+						"stats settings" \
+					| grep -E '^STAT udpport [0-9]+' \
+					| awk '{ print $3; }' \
+					| tr -d '\r'
+				)"
 
-			assert equal \
-				"${maxconns_value}" \
-				2048
-		end
+				assert equal \
+					"${settings_value}" \
+					0
+			end
 
-		it "Runs with UDP off (i.e udpport setting of 0)."
-			udpport_value="$(
-				expect test/telnet-memcached.exp \
-					127.0.0.1 \
-					${container_port_11211} \
-					"stats settings" \
-				| grep -E '^STAT udpport [0-9]+' \
-				| awk '{ print $3; }' \
-				| tr -d '\r'
-			)"
+			it "Sets item_size_max=2097152."
+				settings_value="$(
+					expect test/telnet-memcached.exp \
+						127.0.0.1 \
+						${container_port_11211} \
+						"stats settings" \
+					| grep -E '^STAT item_size_max [0-9]+' \
+					| awk '{ print $3; }' \
+					| tr -d '\r'
+				)"
 
-			assert equal \
-				"${udpport_value}" \
-				0
-
-				it "Adjusts max item size to 8M (i.e > 1M default)."
-					item_size_max_value="$(
-						expect test/telnet-memcached.exp \
-							127.0.0.1 \
-							${container_port_11211} \
-							"stats settings" \
-						| grep -E '^STAT item_size_max [0-9]+' \
-						| awk '{ print $3; }' \
-						| tr -d '\r'
-					)"
-
-					assert equal \
-						"${item_size_max_value}" \
-						8388608
-				end
+				assert equal \
+					"${settings_value}" \
+					2097152
+			end
 		end
 
 		__terminate_container \
