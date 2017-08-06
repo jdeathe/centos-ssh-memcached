@@ -361,6 +361,101 @@ function test_custom_configuration ()
 		INT TERM EXIT
 }
 
+function test_healthcheck ()
+{
+	local -r interval_seconds=0.5
+	local -r retries=4
+	local health_status=""
+
+	trap "__terminate_container memcached.pool-1.1.1 &> /dev/null; \
+		__destroy; \
+		exit 1" \
+		INT TERM EXIT
+
+	describe "Healthcheck"
+		describe "Default configuration"
+			__terminate_container \
+				memcached.pool-1.1.1 \
+			&> /dev/null
+
+			docker run \
+				--detach \
+				--name memcached.pool-1.1.1 \
+				jdeathe/centos-ssh-memcached:latest \
+			&> /dev/null
+
+			it "Returns a valid status on starting."
+				health_status="$(
+					docker inspect \
+						--format='{{json .State.Health.Status}}' \
+						memcached.pool-1.1.1
+				)"
+
+				assert __shpec_matcher_egrep \
+					"${health_status}" \
+					"\"(starting|healthy|unhealthy)\""
+			end
+
+			sleep $(
+				awk \
+					-v interval_seconds="${interval_seconds}" \
+					-v startup_time="${STARTUP_TIME}" \
+					'BEGIN { print 1 + interval_seconds + startup_time; }'
+			)
+
+			it "Returns healthy after startup."
+				health_status="$(
+					docker inspect \
+						--format='{{json .State.Health.Status}}' \
+						memcached.pool-1.1.1
+				)"
+
+				assert equal \
+					"${health_status}" \
+					"\"healthy\""
+			end
+
+			it "Returns unhealthy on failure."
+				# wrapper failure
+				docker exec -t \
+					memcached.pool-1.1.1 \
+					bash -c "mv \
+						/usr/bin/memcached \
+						/usr/bin/memcached2" \
+				&& docker exec -t \
+					memcached.pool-1.1.1 \
+					bash -c "if [[ -n \$(pgrep -f '^/usr/bin/memcached ') ]]; then \
+						kill -9 \$(pgrep -f '^/usr/bin/memcached ')
+					fi"
+
+				sleep $(
+					awk \
+						-v interval_seconds="${interval_seconds}" \
+						-v retries="${retries}" \
+						'BEGIN { print 1 + interval_seconds * retries; }'
+				)
+
+				health_status="$(
+					docker inspect \
+						--format='{{json .State.Health.Status}}' \
+						memcached.pool-1.1.1
+				)"
+
+				assert equal \
+					"${health_status}" \
+					"\"unhealthy\""
+			end
+
+			__terminate_container \
+				memcached.pool-1.1.1 \
+			&> /dev/null
+		end
+	end
+
+	trap - \
+		INT TERM EXIT
+}
+
 if [[ ! -d ${TEST_DIRECTORY} ]]; then
 	printf -- \
 		"ERROR: Please run from the project root.\n" \
@@ -373,5 +468,6 @@ describe "jdeathe/centos-ssh-memcached:latest"
 	__setup
 	test_basic_operations
 	test_custom_configuration
+	test_healthcheck
 	__destroy
 end

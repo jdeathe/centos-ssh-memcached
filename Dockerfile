@@ -18,6 +18,8 @@ RUN rpm --rebuilddb \
 # -----------------------------------------------------------------------------
 # Copy files into place
 # -----------------------------------------------------------------------------
+ADD src/usr/bin \
+	/usr/bin/
 ADD src/usr/sbin \
 	/usr/sbin/
 ADD src/opt/scmi \
@@ -31,7 +33,7 @@ RUN ln -sf \
 		/etc/services-config/supervisor/supervisord.d/memcached-wrapper.conf \
 		/etc/supervisord.d/memcached-wrapper.conf \
 	&& chmod 700 \
-		/usr/sbin/memcached-wrapper
+		/usr/{bin/healthcheck,sbin/memcached-wrapper}
 
 EXPOSE 11211
 
@@ -75,5 +77,11 @@ jdeathe/centos-ssh-memcached:${RELEASE_VERSION} \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-memcached" \
 	org.deathe.description="CentOS-6 6.9 x86_64 - Memcached 1.4."
+
+HEALTHCHECK \
+	--interval=0.5s \
+	--timeout=1s \
+	--retries=4 \
+	CMD ["/usr/bin/healthcheck"]
 
 CMD ["/usr/bin/supervisord", "--configuration=/etc/supervisord.conf"]
