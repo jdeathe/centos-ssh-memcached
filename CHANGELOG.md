@@ -17,6 +17,7 @@ CentOS-6 6.9 x86_64 - Memcached 1.4.
 - Adds `STARTUP_TIME` variable for the `logs-delayed` Makefile target.
 - Adds test case output with improved readability.
 - Adds healthcheck.
+- Adds libmemcached to image.
 
 ### 1.0.1 - 2017-05-22
 
