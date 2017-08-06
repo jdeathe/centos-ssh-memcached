@@ -1,7 +1,7 @@
 centos-ssh-memcached
 ====================
 
-Docker Image including CentOS-6 6.8 x86_64 and Memcached 1.4.
+Docker Image including CentOS-6 6.9 x86_64 and Memcached 1.4.
 
 ## Overview & links
 

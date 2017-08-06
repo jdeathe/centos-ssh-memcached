@@ -28,6 +28,9 @@ NO_CACHE ?= false
 # Directory path for release packages
 DIST_PATH ?= ./dist
 
+# Number of seconds expected to complete container startup including bootstrap.
+STARTUP_TIME ?= 1
+
 # ------------------------------------------------------------------------------
 # Application container configuration
 # ------------------------------------------------------------------------------

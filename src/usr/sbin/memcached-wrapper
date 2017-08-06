@@ -5,7 +5,7 @@ readonly DAEMON_OPTS="
  -p 11211
  -m ${MEMCACHED_CACHESIZE:-64}
  -c ${MEMCACHED_MAXCONN:-1024}
- ${MEMCACHED_OPTIONS}
+ ${MEMCACHED_OPTIONS:-}
 "
 readonly MEMCACHED=/usr/bin/memcached
 readonly NICE=/bin/nice
