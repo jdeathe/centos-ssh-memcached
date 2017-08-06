@@ -32,6 +32,7 @@ function __get_container_port ()
 # container - Docker container name.
 # counter - Timeout counter in seconds.
 # process_pattern - Regular expression pattern used to match running process.
+# ready_test - Command used to test if the service is ready.
 function __is_container_ready ()
 {
 	local container="${1:-}"
@@ -41,6 +42,7 @@ function __is_container_ready ()
 			'BEGIN { print 10 * seconds; }'
 	)
 	local process_pattern="${3:-}"
+	local ready_test="${4:-true}"
 
 	until (( counter == 0 )); do
 		sleep 0.1
@@ -48,8 +50,7 @@ function __is_container_ready ()
 		if docker exec ${container} \
 			bash -c "ps axo command \
 				| grep -qE \"${process_pattern}\" \
-				&& memcached-tool 127.0.0.1:11211 stats \
-				| grep -qP '[ ]+accepting_conns[ ]+1[^0-9]*$'" \
+				&& eval \"${ready_test}\"" \
 			&> /dev/null
 		then
 			break
@@ -157,7 +158,12 @@ function test_basic_operations ()
 		if ! __is_container_ready \
 			memcached.pool-1.1.1 \
 			${STARTUP_TIME} \
-			"/usr/bin/memcached "
+			"/usr/bin/memcached " \
+			"memcached-tool \
+				127.0.0.1:11211 \
+				stats \
+			| grep -qP \
+				'[ ]+accepting_conns[ ]+1[^0-9]*$'"
 		then
 			exit 1
 		fi
@@ -281,7 +287,12 @@ function test_custom_configuration ()
 		if ! __is_container_ready \
 			memcached.pool-1.1.1 \
 			${STARTUP_TIME} \
-			"/usr/bin/memcached "
+			"/usr/bin/memcached " \
+			"memcached-tool \
+				127.0.0.1:11211 \
+				stats \
+			| grep -qP \
+				'[ ]+accepting_conns[ ]+1[^0-9]*$'"
 		then
 			exit 1
 		fi
