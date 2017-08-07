@@ -8,7 +8,13 @@ DOCKER_PORT_MAP_TCP_11211="${DOCKER_PORT_MAP_TCP_11211:-11211}"
 
 function __destroy ()
 {
-	:
+	local -r private_network_1="bridge_internal_1"
+
+	if [[ -n $(docker network ls -q -f name="${private_network_1}") ]]; then
+		docker network rm \
+			${private_network_1} \
+		&> /dev/null
+	fi
 }
 
 function __get_container_port ()
@@ -68,7 +74,17 @@ function __is_container_ready ()
 
 function __setup ()
 {
-	:
+	local -r private_network_1="bridge_internal_1"
+
+	if [[ -z $(docker network ls -q -f name="${private_network_1}") ]]; then
+		docker network create \
+			--internal \
+			--driver bridge \
+			--gateway 172.172.40.1 \
+			--subnet 172.172.40.0/24 \
+			${private_network_1} \
+		&> /dev/null
+	fi
 }
 
 # Custom shpec matcher
@@ -229,10 +245,14 @@ function test_basic_operations ()
 
 function test_custom_configuration ()
 {
+	local -r private_network_1="bridge_internal_1"
+	local -r test_data_input="$(< test/fixtures/lorem-ipsum-base64.txt)"
 	local container_port_11211=""
 	local settings_value=""
+	local test_data_output=""
 
 	trap "__terminate_container memcached.pool-1.1.1 &> /dev/null; \
+		__terminate_container memcached.pool-1.1.2 &> /dev/null; \
 		__destroy; \
 		exit 1" \
 		INT TERM EXIT
@@ -352,8 +372,128 @@ function test_custom_configuration ()
 			end
 		end
 
+		describe "Runs on a private network."
+			__terminate_container \
+				memcached.pool-1.1.1 \
+			&> /dev/null
+
+			__terminate_container \
+				memcached.pool-1.1.2 \
+			&> /dev/null
+
+			it "Runs a named server container"
+				docker run \
+					--detach \
+					--name memcached.pool-1.1.1 \
+					--network ${private_network_1} \
+					jdeathe/centos-ssh-memcached:latest \
+				&> /dev/null
+
+				assert equal \
+					"${?}" \
+					0
+			end
+
+			it "Runs a named client container"
+				docker run \
+					--detach \
+					--name memcached.pool-1.1.2 \
+					--network ${private_network_1} \
+					jdeathe/centos-ssh-memcached:latest \
+				&> /dev/null
+
+				assert equal \
+					"${?}" \
+					0
+			end
+
+			if ! __is_container_ready \
+				memcached.pool-1.1.1 \
+				${STARTUP_TIME} \
+				"/usr/bin/memcached " \
+				"memcached-tool \
+					127.0.0.1:11211 \
+					stats \
+				| grep -qP \
+					'[ ]+accepting_conns[ ]+1[^0-9]*$'"
+			then
+				exit 1
+			fi
+
+			if ! __is_container_ready \
+				memcached.pool-1.1.2 \
+				${STARTUP_TIME} \
+				"/usr/bin/memcached "
+			then
+				exit 1
+			fi
+
+			describe "Memcached usage"
+				it "Can set data"
+					docker cp \
+						test/fixtures/lorem-ipsum-base64.txt \
+						memcached.pool-1.1.2:/tmp/lorem-ipsum-base64.txt
+
+					docker exec \
+						memcached.pool-1.1.2 \
+							memcp \
+							--servers=127.0.0.1:11211 \
+							/tmp/lorem-ipsum-base64.txt
+					&> /dev/null
+
+					assert equal \
+						"${?}" \
+						0
+				end
+
+				it "Can get data"
+					# memcat appends a trailing newline if there's a line break.
+					test_data_output="$(
+						docker exec \
+							memcached.pool-1.1.2 \
+							bash -c "memcat \
+								--servers=127.0.0.1:11211 \
+								lorem-ipsum-base64.txt \
+							| awk 'NR > 1 { print line; } \
+								{ line = \$0; } \
+								END { printf \$0; }'"
+					)"
+
+					assert equal \
+						"${test_data_output}" \
+						"${test_data_input}"
+				end
+
+				it "Can flush data"
+					docker exec \
+						memcached.pool-1.1.2 \
+						memflush \
+							--servers=127.0.0.1:11211
+
+					test_data_output="$(
+						docker exec \
+							memcached.pool-1.1.2 \
+							bash -c "memcat \
+								--servers=127.0.0.1:11211 \
+								lorem-ipsum-base64.txt \
+							| awk 'NR > 1 { print line; } \
+								{ line = \$0; } \
+								END { printf \$0; }'"
+					)"
+
+					assert equal \
+						"${test_data_output}" \
+						""
+				end
+			end
+		end
+
 		__terminate_container \
 			memcached.pool-1.1.1 \
+		&> /dev/null
+
+		__terminate_container \
+			memcached.pool-1.1.2 \
 		&> /dev/null
 	end
 
