@@ -9,8 +9,10 @@ RUN rpm --rebuilddb \
 	&& yum -y install \
 			--setopt=tsflags=nodocs \
 			--disableplugin=fastestmirror \
+		libmemcached-0.31-1.1.el6 \
 		memcached-1.4.4-5.el6 \
 	&& yum versionlock add \
+		libmemcached* \
 		memcached* \
 	&& rm -rf /var/cache/yum/* \
 	&& yum clean all
