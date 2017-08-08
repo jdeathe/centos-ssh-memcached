@@ -78,6 +78,10 @@ $ docker run \
 
 There are environmental variables available which allows the operator to customise the running container.
 
+##### MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER
+
+It may be desirable to prevent the startup of the memcached-wrapper script. For example, when using an image built from this Dockerfile as the source for another Dockerfile you could disable memcached from startup by setting `MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER` to `false`. The benefit of this is to reduce the number of running processes in the final container. Another use for this would be to make use of the packages installed in the image such as `memcached-tool` or the libmemcached tools `memcp`, `memcat`, `memrm` and `memflush`; effectively making the container a Memcached client.
+
 ##### MEMCACHED_CACHESIZE
 
 Use `MEMCACHED_CACHESIZE` MB memory max to use for object storage; the default is 64 megabytes. 

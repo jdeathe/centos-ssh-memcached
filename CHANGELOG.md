@@ -18,6 +18,7 @@ CentOS-6 6.9 x86_64 - Memcached 1.4.
 - Adds test case output with improved readability.
 - Adds healthcheck.
 - Adds libmemcached to image.
+- Adds `MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER` to optionally disable process startup.
 
 ### 1.0.1 - 2017-05-22
 
