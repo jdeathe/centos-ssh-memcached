@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+if [[ ${MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER} != true ]]; then
+	exit 0
+fi
+
+# memcached-wrapper
+if ! ps axo command \
+	| grep -qE '^/usr/bin/memcached '
+then
+	exit 1
+fi
+
+# ready status
+if ! memcached-tool \
+	127.0.0.1:11211 \
+	stats \
+| grep -qP \
+	'[ ]+accepting_conns[ ]+1[^0-9]*$'
+then
+	exit 1
+fi
+
+exit 0

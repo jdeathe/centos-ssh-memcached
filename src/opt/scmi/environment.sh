@@ -1,12 +1,12 @@
 # -----------------------------------------------------------------------------
 # Constants
 # -----------------------------------------------------------------------------
-DOCKER_USER=jdeathe
-DOCKER_IMAGE_NAME=centos-ssh-memcached
+readonly DOCKER_USER=jdeathe
+readonly DOCKER_IMAGE_NAME=centos-ssh-memcached
 
 # Tag validation patterns
-DOCKER_IMAGE_TAG_PATTERN='^(latest|centos-6|((1|centos-6-1)\.[0-9]+\.[0-9]+))$'
-DOCKER_IMAGE_RELEASE_TAG_PATTERN='^(1|centos-6-1)\.[0-9]+\.[0-9]+$'
+readonly DOCKER_IMAGE_TAG_PATTERN='^(latest|centos-6|((1|centos-6-1)\.[0-9]+\.[0-9]+))$'
+readonly DOCKER_IMAGE_RELEASE_TAG_PATTERN='^(1|centos-6-1)\.[0-9]+\.[0-9]+$'
 
 # -----------------------------------------------------------------------------
 # Variables
@@ -26,6 +26,9 @@ NO_CACHE="${NO_CACHE:-false}"
 
 # Directory path for release packages
 DIST_PATH="${DIST_PATH:-./dist}"
+
+# Number of seconds expected to complete container startup including bootstrap.
+STARTUP_TIME="${STARTUP_TIME:-1}"
 
 # ETCD register service settings
 REGISTER_ETCD_PARAMETERS="${REGISTER_ETCD_PARAMETERS:-}"
@@ -49,6 +52,7 @@ SSH_USER_PASSWORD="${SSH_USER_PASSWORD:-}"
 SSH_USER_PASSWORD_HASHED="${SSH_USER_PASSWORD_HASHED:-false}"
 SSH_USER_SHELL="${SSH_USER_SHELL:-/bin/bash}"
 # -----------------------------------------------------------------------------
+MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER="${MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER:-true}"
 MEMCACHED_CACHESIZE="${MEMCACHED_CACHESIZE:-64}"
 MEMCACHED_MAXCONN="${MEMCACHED_MAXCONN:-1024}"
 MEMCACHED_OPTIONS="${MEMCACHED_OPTIONS:-"-U 0"}"

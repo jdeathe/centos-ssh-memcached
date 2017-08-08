@@ -4,7 +4,21 @@
 
 Summary of release changes for Version 1.
 
-CentOS-6 6.8 x86_64 - Memcached 1.4.
+CentOS-6 6.9 x86_64 - Memcached 1.4.
+
+### 1.1.0 - 2017-08-08
+
+- Fixes issue with expect script failure when using `expect -f`.
+- Adds `SHPEC_ROOT` variable to Makefile.
+- Removes scmi; it's maintained [upstream](https://github.com/jdeathe/centos-ssh/blob/centos-6/src/usr/sbin/scmi).
+- Adds use of readonly variables for constants.
+- Updates source image to [1.8.1 tag](https://github.com/jdeathe/centos-ssh/releases/tag/1.8.1).
+- Adds a `src` directory for the image root files.
+- Adds `STARTUP_TIME` variable for the `logs-delayed` Makefile target.
+- Adds test case output with improved readability.
+- Adds healthcheck.
+- Adds [libmemcached](http://libmemcached.org/) to image.
+- Adds `MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER` to optionally disable process startup.
 
 ### 1.0.1 - 2017-05-22
 

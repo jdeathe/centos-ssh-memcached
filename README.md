@@ -1,15 +1,15 @@
 centos-ssh-memcached
 ====================
 
-Docker Image including CentOS-6 6.8 x86_64 and Memcached 1.4.
+Docker Image including CentOS-6 6.9 x86_64 and Memcached 1.4.
 
 ## Overview & links
 
-The latest CentOS-6 based release can be pulled from the `centos-6` Docker tag. It is recommended to select a specific release tag - the convention is `centos-6-1.0.1` or `1.0.1` for the [1.0.1](https://github.com/jdeathe/centos-ssh-memcached/tree/1.0.1) release tag.
+The latest CentOS-6 based release can be pulled from the `centos-6` Docker tag. It is recommended to select a specific release tag - the convention is `centos-6-1.1.0` or `1.1.0` for the [1.1.0](https://github.com/jdeathe/centos-ssh-memcached/tree/1.1.0) release tag.
 
 ### Tags and respective `Dockerfile` links
 
-- `centos-6`, `centos-6-1.0.1`, `1.0.1` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-6/Dockerfile)
+- `centos-6`, `centos-6-1.1.0`, `1.1.0` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-6/Dockerfile)
 
 Included in the build are the [SCL](https://www.softwarecollections.org/), [EPEL](http://fedoraproject.org/wiki/EPEL) and [IUS](https://ius.io) repositories. Installed packages include [OpenSSH](http://www.openssh.com/portable.html) secure shell, [vim-minimal](http://www.vim.org/), are installed along with python-setuptools, [supervisor](http://supervisord.org/) and [supervisor-stdout](https://github.com/coderanger/supervisor-stdout).
 
@@ -77,6 +77,10 @@ $ docker run \
 #### Environment Variables
 
 There are environmental variables available which allows the operator to customise the running container.
+
+##### MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER
+
+It may be desirable to prevent the startup of the memcached-wrapper script. For example, when using an image built from this Dockerfile as the source for another Dockerfile you could disable memcached from startup by setting `MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER` to `false`. The benefit of this is to reduce the number of running processes in the final container. Another use for this would be to make use of the packages installed in the image such as `memcached-tool` or the libmemcached tools `memcp`, `memcat`, `memrm` and `memflush`; effectively making the container a Memcached client.
 
 ##### MEMCACHED_CACHESIZE
 

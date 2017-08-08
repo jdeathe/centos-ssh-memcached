@@ -3,6 +3,7 @@
 # -----------------------------------------------------------------------------
 DOCKER_USER := jdeathe
 DOCKER_IMAGE_NAME := centos-ssh-memcached
+SHPEC_ROOT := test/shpec
 
 # Tag validation patterns
 DOCKER_IMAGE_TAG_PATTERN := ^(latest|centos-6|((1|centos-6-1)\.[0-9]+\.[0-9]+))$
@@ -27,6 +28,9 @@ NO_CACHE ?= false
 # Directory path for release packages
 DIST_PATH ?= ./dist
 
+# Number of seconds expected to complete container startup including bootstrap.
+STARTUP_TIME ?= 1
+
 # ------------------------------------------------------------------------------
 # Application container configuration
 # ------------------------------------------------------------------------------
@@ -44,6 +48,7 @@ SSH_USER_PASSWORD ?=
 SSH_USER_PASSWORD_HASHED ?= false
 SSH_USER_SHELL ?= /bin/bash
 # ------------------------------------------------------------------------------
+MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER ?= true
 MEMCACHED_CACHESIZE ?= 64
 MEMCACHED_MAXCONN ?= 1024
 MEMCACHED_OPTIONS ?= -U 0
