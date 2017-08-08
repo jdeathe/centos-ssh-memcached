@@ -6,7 +6,7 @@ Summary of release changes for Version 1.
 
 CentOS-6 6.9 x86_64 - Memcached 1.4.
 
-### 1.2.0 - Unreleased
+### 1.1.0 - 2017-08-08
 
 - Fixes issue with expect script failure when using `expect -f`.
 - Adds `SHPEC_ROOT` variable to Makefile.
@@ -17,7 +17,7 @@ CentOS-6 6.9 x86_64 - Memcached 1.4.
 - Adds `STARTUP_TIME` variable for the `logs-delayed` Makefile target.
 - Adds test case output with improved readability.
 - Adds healthcheck.
-- Adds libmemcached to image.
+- Adds [libmemcached](http://libmemcached.org/) to image.
 - Adds `MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER` to optionally disable process startup.
 
 ### 1.0.1 - 2017-05-22
