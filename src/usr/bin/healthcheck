@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+if [[ ${MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER} != true ]]; then
+	exit 0
+fi
+
 # memcached-wrapper
 if ! ps axo command \
 	| grep -qE '^/usr/bin/memcached '

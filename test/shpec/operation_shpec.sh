@@ -385,6 +385,7 @@ function test_custom_configuration ()
 				docker run \
 					--detach \
 					--name memcached.pool-1.1.1 \
+					--network-alias memcached.pool-1.1.1 \
 					--network ${private_network_1} \
 					jdeathe/centos-ssh-memcached:latest \
 				&> /dev/null
@@ -398,7 +399,9 @@ function test_custom_configuration ()
 				docker run \
 					--detach \
 					--name memcached.pool-1.1.2 \
+					--network-alias memcached.pool-1.1.2 \
 					--network ${private_network_1} \
+					--env MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=false \
 					jdeathe/centos-ssh-memcached:latest \
 				&> /dev/null
 
@@ -437,7 +440,7 @@ function test_custom_configuration ()
 					docker exec \
 						memcached.pool-1.1.2 \
 							memcp \
-							--servers=127.0.0.1:11211 \
+							--servers=memcached.pool-1.1.1:11211 \
 							/tmp/lorem-ipsum-base64.txt
 					&> /dev/null
 
@@ -452,7 +455,7 @@ function test_custom_configuration ()
 						docker exec \
 							memcached.pool-1.1.2 \
 							bash -c "memcat \
-								--servers=127.0.0.1:11211 \
+								--servers=memcached.pool-1.1.1:11211 \
 								lorem-ipsum-base64.txt \
 							| awk 'NR > 1 { print line; } \
 								{ line = \$0; } \
@@ -468,13 +471,13 @@ function test_custom_configuration ()
 					docker exec \
 						memcached.pool-1.1.2 \
 						memflush \
-							--servers=127.0.0.1:11211
+							--servers=memcached.pool-1.1.1:11211
 
 					test_data_output="$(
 						docker exec \
 							memcached.pool-1.1.2 \
 							bash -c "memcat \
-								--servers=127.0.0.1:11211 \
+								--servers=memcached.pool-1.1.1:11211 \
 								lorem-ipsum-base64.txt \
 							| awk 'NR > 1 { print line; } \
 								{ line = \$0; } \
@@ -494,6 +497,39 @@ function test_custom_configuration ()
 
 		__terminate_container \
 			memcached.pool-1.1.2 \
+		&> /dev/null
+	end
+
+	describe "Configure autostart"
+		__terminate_container \
+			memcached.pool-1.1.1 \
+		&> /dev/null
+
+		docker run \
+			--detach \
+			--name memcached.pool-1.1.1 \
+			--env MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=false \
+			jdeathe/centos-ssh-memcached:latest \
+		&> /dev/null
+
+		sleep ${STARTUP_TIME}
+
+		it "Can disable memcached-wrapper."
+			docker ps \
+				--format "name=memcached.pool-1.1.1" \
+				--format "health=healthy" \
+			&> /dev/null \
+			&& docker top \
+				memcached.pool-1.1.1 \
+			| grep -qE '/usr/bin/memcached '
+
+			assert equal \
+				"${?}" \
+				"1"
+		end
+
+		__terminate_container \
+			memcached.pool-1.1.1 \
 		&> /dev/null
 	end
 

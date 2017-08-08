@@ -48,6 +48,7 @@ SSH_USER_PASSWORD ?=
 SSH_USER_PASSWORD_HASHED ?= false
 SSH_USER_SHELL ?= /bin/bash
 # ------------------------------------------------------------------------------
+MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER ?= true
 MEMCACHED_CACHESIZE ?= 64
 MEMCACHED_MAXCONN ?= 1024
 MEMCACHED_OPTIONS ?= -U 0

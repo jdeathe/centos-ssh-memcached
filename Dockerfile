@@ -42,7 +42,8 @@ EXPOSE 11211
 # -----------------------------------------------------------------------------
 # Set default environment variables
 # -----------------------------------------------------------------------------
-ENV MEMCACHED_CACHESIZE="64" \
+ENV MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=true \
+	MEMCACHED_CACHESIZE="64" \
 	MEMCACHED_MAXCONN="1024" \
 	MEMCACHED_OPTIONS="-U 0" \
 	SSH_AUTOSTART_SSHD=false \
