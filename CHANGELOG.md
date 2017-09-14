@@ -6,7 +6,7 @@ Summary of release changes for Version 1.
 
 CentOS-6 6.9 x86_64 - Memcached 1.4.
 
-### 1.1.1 - Unreleased
+### 1.1.1 - 2017-09-15
 
 - Updates source image to [1.8.2 tag](https://github.com/jdeathe/centos-ssh/releases/tag/1.8.2).
 
