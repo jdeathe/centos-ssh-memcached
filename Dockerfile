@@ -3,7 +3,7 @@
 #
 # CentOS-6, Memcached 1.4.
 # =============================================================================
-FROM jdeathe/centos-ssh:1.8.1
+FROM jdeathe/centos-ssh:1.8.2
 
 RUN rpm --rebuilddb \
 	&& yum -y install \
@@ -52,7 +52,7 @@ ENV MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=true \
 # -----------------------------------------------------------------------------
 # Set image metadata
 # -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="1.1.0"
+ARG RELEASE_VERSION="1.1.1"
 LABEL \
 	maintainer="James Deathe <james.deathe@gmail.com>" \
 	install="docker run \
