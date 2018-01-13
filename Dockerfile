@@ -3,7 +3,7 @@
 #
 # CentOS-6, Memcached 1.4.
 # =============================================================================
-FROM jdeathe/centos-ssh:1.8.2
+FROM jdeathe/centos-ssh:1.8.3
 
 RUN rpm --rebuilddb \
 	&& yum -y install \
