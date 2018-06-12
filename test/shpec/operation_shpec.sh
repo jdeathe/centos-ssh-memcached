@@ -479,6 +479,7 @@ function test_custom_configuration ()
 							bash -c "memcat \
 								--servers=memcached.pool-1.1.1:11211 \
 								lorem-ipsum-base64.txt \
+							2> /dev/null \
 							| awk 'NR > 1 { print line; } \
 								{ line = \$0; } \
 								END { printf \$0; }'"
