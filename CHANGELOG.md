@@ -4,11 +4,12 @@
 
 Summary of release changes for Version 1.
 
-CentOS-6 6.9 x86_64 - Memcached 1.4.
+CentOS-6 6.10 x86_64 - Memcached 1.4.
 
-### 1.1.4 - Unreleased
+### 1.2.0 - Unreleased
 
 - Adds details of the centos-7 (Version 2) branch to the README.
+- Updates source image to [1.9.0](https://github.com/jdeathe/centos-ssh/releases/tag/1.9.0).
 
 ### 1.1.3 - 2018-05-13
 
