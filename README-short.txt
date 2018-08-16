@@ -1,1 +1,1 @@
-CentOS-7 7.4.1708 x86_64 - Memcached.
+CentOS-7 7.5.1804 x86_64 - Memcached.
