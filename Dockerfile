@@ -3,7 +3,7 @@
 #
 # CentOS-7, Memcached 1.4.
 # =============================================================================
-FROM jdeathe/centos-ssh:2.3.2
+FROM jdeathe/centos-ssh:2.4.0
 
 RUN rpm --rebuilddb \
 	&& yum -y install \
@@ -79,7 +79,7 @@ jdeathe/centos-ssh-memcached:${RELEASE_VERSION} \
 	org.deathe.license="MIT" \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-memcached" \
-	org.deathe.description="CentOS-7 7.4.1708 x86_64 - Memcached 1.4."
+	org.deathe.description="CentOS-7 7.5.1804 x86_64 - Memcached 1.4."
 
 HEALTHCHECK \
 	--interval=0.5s \
