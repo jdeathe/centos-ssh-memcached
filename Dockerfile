@@ -3,7 +3,7 @@
 #
 # CentOS-6, Memcached 1.4.
 # =============================================================================
-FROM jdeathe/centos-ssh:1.8.4
+FROM jdeathe/centos-ssh:1.9.0
 
 RUN rpm --rebuilddb \
 	&& yum -y install \
@@ -52,7 +52,7 @@ ENV MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=true \
 # -----------------------------------------------------------------------------
 # Set image metadata
 # -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="1.1.3"
+ARG RELEASE_VERSION="1.2.0"
 LABEL \
 	maintainer="James Deathe <james.deathe@gmail.com>" \
 	install="docker run \
@@ -79,7 +79,7 @@ jdeathe/centos-ssh-memcached:${RELEASE_VERSION} \
 	org.deathe.license="MIT" \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-memcached" \
-	org.deathe.description="CentOS-6 6.9 x86_64 - Memcached 1.4."
+	org.deathe.description="CentOS-6 6.10 x86_64 - Memcached 1.4."
 
 HEALTHCHECK \
 	--interval=0.5s \
