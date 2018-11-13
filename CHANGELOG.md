@@ -6,6 +6,10 @@ Summary of release changes for Version 1.
 
 CentOS-6 6.10 x86_64 - Memcached 1.4.
 
+### 1.2.1 - Unreleased
+
+- Fixes typo in test; using `--format` instead of `--filter`.
+
 ### 1.2.0 - 2018-08-16
 
 - Adds details of the centos-7 (Version 2) branch to the README.
