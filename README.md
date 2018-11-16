@@ -39,6 +39,7 @@ Run up a container named `memcached.pool-1.1.1` from the docker image `jdeathe/c
 $ docker run -d \
   --name memcached.pool-1.1.1 \
   -p 11211:11211/tcp \
+  --sysctl "net.core.somaxconn=1024" \
   jdeathe/centos-ssh-memcached:2.1.0
 ```
 
@@ -74,6 +75,9 @@ $ docker run \
   --tty \
   --name memcached.pool-1.1.1 \
   --publish 11211:11211/tcp \
+  --sysctl "net.core.somaxconn=1024" \
+  --sysctl "net.ipv4.ip_local_port_range=1024 65535" \
+  --sysctl "net.ipv4.route.flush=1" \
   --env "MEMCACHED_CACHESIZE=32" \
   jdeathe/centos-ssh-memcached:2.1.0
 ```
