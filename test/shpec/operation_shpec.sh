@@ -517,8 +517,8 @@ function test_custom_configuration ()
 
 		it "Can disable memcached-wrapper."
 			docker ps \
-				--format "name=memcached.pool-1.1.1" \
-				--format "health=healthy" \
+				--filter "name=memcached.pool-1.1.1" \
+				--filter "health=healthy" \
 			&> /dev/null \
 			&& docker top \
 				memcached.pool-1.1.1 \

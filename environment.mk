@@ -13,6 +13,11 @@ DOCKER_IMAGE_RELEASE_TAG_PATTERN := ^(1|2|centos-(6-1|7-2))\.[0-9]+\.[0-9]+$
 # Variables
 # -----------------------------------------------------------------------------
 
+# Docker --sysctl settings
+SYSCTL_NET_CORE_SOMAXCONN ?= 1024
+SYSCTL_NET_IPV4_IP_LOCAL_PORT_RANGE ?= 1024 65535
+SYSCTL_NET_IPV4_ROUTE_FLUSH ?= 1
+
 # Docker image/container settings
 DOCKER_CONTAINER_OPTS ?=
 DOCKER_IMAGE_TAG ?= latest
