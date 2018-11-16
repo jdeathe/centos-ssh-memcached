@@ -6,7 +6,7 @@ Summary of release changes for Version 2.
 
 CentOS-7 7.5.1804 x86_64 - Memcached 1.4.
 
-### 2.1.1 - Unreleased
+### 2.1.1 - 2018-11-16
 
 - Fixes typo in test; using `--format` instead of `--filter`.
 - Adds required `--sysctl` settings to docker run templates.
