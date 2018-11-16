@@ -59,6 +59,9 @@ Environment="MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=true"
 Environment="MEMCACHED_CACHESIZE=64"
 Environment="MEMCACHED_MAXCONN=1024"
 Environment="MEMCACHED_OPTIONS=-U 0"
+Environment="SYSCTL_NET_CORE_SOMAXCONN=1024"
+Environment="SYSCTL_NET_IPV4_IP_LOCAL_PORT_RANGE=1024 65535"
+Environment="SYSCTL_NET_IPV4_ROUTE_FLUSH=1"
 
 # Initialisation: Load image from local storage if available, otherwise pull.
 ExecStartPre=/bin/bash -c \
@@ -88,6 +91,9 @@ ExecStartPre=-/bin/bash -c \
 ExecStart=/bin/bash -c \
   "exec /usr/bin/docker run \
     --name %p.%i \
+    --sysctl \"net.core.somaxconn=${SYSCTL_NET_CORE_SOMAXCONN}\" \
+    --sysctl \"net.ipv4.ip_local_port_range=${SYSCTL_NET_IPV4_IP_LOCAL_PORT_RANGE}\" \
+    --sysctl \"net.ipv4.route.flush=${SYSCTL_NET_IPV4_ROUTE_FLUSH}\" \
     --env \"MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=${MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER}\" \
     --env \"MEMCACHED_CACHESIZE=${MEMCACHED_CACHESIZE}\" \
     --env \"MEMCACHED_MAXCONN=${MEMCACHED_MAXCONN}\" \
