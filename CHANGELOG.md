@@ -6,7 +6,7 @@ Summary of release changes for Version 1.
 
 CentOS-6 6.10 x86_64 - Memcached 1.4.
 
-### 1.2.1 - Unreleased
+### 1.2.1 - 2018-11-16
 
 - Fixes typo in test; using `--format` instead of `--filter`.
 - Adds required `--sysctl` settings to docker run templates.
