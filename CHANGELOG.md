@@ -9,6 +9,7 @@ CentOS-6 6.10 x86_64 - Memcached 1.4.
 ### 1.2.1 - Unreleased
 
 - Fixes typo in test; using `--format` instead of `--filter`.
+- Adds required `--sysctl` settings to docker run templates.
 
 ### 1.2.0 - 2018-08-16
 
