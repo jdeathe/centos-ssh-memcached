@@ -20,23 +20,20 @@ RUN rpm --rebuilddb \
 # -----------------------------------------------------------------------------
 # Copy files into place
 # -----------------------------------------------------------------------------
+ADD src/etc \
+	/etc/
+ADD src/opt/scmi \
+	/opt/scmi/
 ADD src/usr/bin \
 	/usr/bin/
 ADD src/usr/sbin \
 	/usr/sbin/
-ADD src/opt/scmi \
-	/opt/scmi/
-ADD src/etc/services-config/supervisor/supervisord.d \
-	/etc/services-config/supervisor/supervisord.d/
-ADD src/etc/systemd/system \
-	/etc/systemd/system/
 
 # -----------------------------------------------------------------------------
 # Provisioning
 # - Set permissions
 # -----------------------------------------------------------------------------
-RUN ln -sf \
-		/etc/services-config/supervisor/supervisord.d/memcached-wrapper.conf \
+RUN chmod 644 \
 		/etc/supervisord.d/memcached-wrapper.conf \
 	&& chmod 700 \
 		/usr/{bin/healthcheck,sbin/memcached-wrapper}
