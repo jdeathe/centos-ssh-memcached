@@ -1,10 +1,10 @@
-# =============================================================================
-# jdeathe/centos-ssh-memcached
-#
-# CentOS-7, Memcached 1.4.
-# =============================================================================
 FROM jdeathe/centos-ssh:2.5.0
 
+ARG RELEASE_VERSION="2.1.1"
+
+# -----------------------------------------------------------------------------
+# Base install of required packages
+# -----------------------------------------------------------------------------
 RUN rpm --rebuilddb \
 	&& yum -y install \
 			--setopt=tsflags=nodocs \
@@ -31,6 +31,10 @@ ADD src/etc/services-config/supervisor/supervisord.d \
 ADD src/etc/systemd/system \
 	/etc/systemd/system/
 
+# -----------------------------------------------------------------------------
+# Provisioning
+# - Set permissions
+# -----------------------------------------------------------------------------
 RUN ln -sf \
 		/etc/services-config/supervisor/supervisord.d/memcached-wrapper.conf \
 		/etc/supervisord.d/memcached-wrapper.conf \
@@ -52,7 +56,6 @@ ENV MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=true \
 # -----------------------------------------------------------------------------
 # Set image metadata
 # -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="2.1.1"
 LABEL \
 	maintainer="James Deathe <james.deathe@gmail.com>" \
 	install="docker run \
