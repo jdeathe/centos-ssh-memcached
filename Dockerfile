@@ -46,12 +46,12 @@ EXPOSE 11211
 # -----------------------------------------------------------------------------
 # Set default environment variables
 # -----------------------------------------------------------------------------
-ENV MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=true \
+ENV MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER="true" \
 	MEMCACHED_CACHESIZE="64" \
 	MEMCACHED_MAXCONN="1024" \
 	MEMCACHED_OPTIONS="-U 0" \
-	SSH_AUTOSTART_SSHD=false \
-	SSH_AUTOSTART_SSHD_BOOTSTRAP=false
+	SSH_AUTOSTART_SSHD="false" \
+	SSH_AUTOSTART_SSHD_BOOTSTRAP="false"
 
 # -----------------------------------------------------------------------------
 # Set image metadata
