@@ -10,6 +10,7 @@ CentOS-7 7.5.1804 x86_64 - Memcached 1.4.
 
 - Updates source image to [2.5.0](https://github.com/jdeathe/centos-ssh/releases/tag/2.5.0).
 - Updates and restructures Dockerfile.
+- Updates default HEALTHCHECK interval to 1 second from 0.5.
 - Adds placeholder replacement of `RELEASE_VERSION` docker argument to systemd service unit template.
 - Adds error messages to healthcheck script and includes supervisord check.
 - Removes use of `/etc/services-config` paths.

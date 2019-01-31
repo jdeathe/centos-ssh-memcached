@@ -85,7 +85,7 @@ jdeathe/centos-ssh-memcached:${RELEASE_VERSION} \
 	org.deathe.description="CentOS-7 7.5.1804 x86_64 - Memcached 1.4."
 
 HEALTHCHECK \
-	--interval=0.5s \
+	--interval=1s \
 	--timeout=1s \
 	--retries=4 \
 	CMD ["/usr/bin/healthcheck"]

@@ -540,7 +540,7 @@ function test_custom_configuration ()
 
 function test_healthcheck ()
 {
-	local -r interval_seconds=0.5
+	local -r interval_seconds=1
 	local -r retries=4
 	local health_status=""
 
