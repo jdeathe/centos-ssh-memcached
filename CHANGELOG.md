@@ -13,6 +13,7 @@ CentOS-7 7.5.1804 x86_64 - Memcached 1.4.
 - Updates default HEALTHCHECK interval to 1 second from 0.5.
 - Adds placeholder replacement of `RELEASE_VERSION` docker argument to systemd service unit template.
 - Adds error messages to healthcheck script and includes supervisord check.
+- Adds consideration for event lag into test cases for unhealthy health_status events.
 - Removes use of `/etc/services-config` paths.
 - Removes X-Fleet section from etcd register template unit-file.
 
