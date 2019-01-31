@@ -10,6 +10,7 @@ CentOS-7 7.5.1804 x86_64 - Memcached 1.4.
 
 - Updates source image to [2.5.0](https://github.com/jdeathe/centos-ssh/releases/tag/2.5.0).
 - Updates and restructures Dockerfile.
+- Adds placeholder replacement of `RELEASE_VERSION` docker argument to systemd service unit template.
 - Removes use of `/etc/services-config` paths.
 - Removes X-Fleet section from etcd register template unit-file.
 

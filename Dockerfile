@@ -33,7 +33,10 @@ ADD src/usr/sbin \
 # Provisioning
 # - Set permissions
 # -----------------------------------------------------------------------------
-RUN chmod 644 \
+RUN sed -i \
+		-e "s~{{RELEASE_VERSION}}~${RELEASE_VERSION}~g" \
+		/etc/systemd/system/centos-ssh-memcached@.service \
+	&& chmod 644 \
 		/etc/supervisord.d/memcached-wrapper.conf \
 	&& chmod 700 \
 		/usr/{bin/healthcheck,sbin/memcached-wrapper}
