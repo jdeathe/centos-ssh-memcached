@@ -133,7 +133,7 @@ function test_basic_operations ()
 	local container_port_11211=""
 	local settings_value=""
 
-	trap "__terminate_container memcached.pool-1.1.1 &> /dev/null; \
+	trap "__terminate_container memcached.1 &> /dev/null; \
 		__destroy; \
 		exit 1" \
 		INT TERM EXIT
@@ -141,20 +141,20 @@ function test_basic_operations ()
 	describe "Basic Memcached operations"
 		describe "Runs named container"
 			__terminate_container \
-				memcached.pool-1.1.1 \
+				memcached.1 \
 			&> /dev/null
 
 			it "Can publish ${DOCKER_PORT_MAP_TCP_11211}:11211."
 				docker run \
 					--detach \
-					--name memcached.pool-1.1.1 \
+					--name memcached.1 \
 					--publish ${DOCKER_PORT_MAP_TCP_11211}:11211 \
 					jdeathe/centos-ssh-memcached:latest \
 				&> /dev/null
 
 				container_port_11211="$(
 					__get_container_port \
-						memcached.pool-1.1.1 \
+						memcached.1 \
 						11211/tcp
 				)"
 
@@ -172,7 +172,7 @@ function test_basic_operations ()
 		end
 
 		if ! __is_container_ready \
-			memcached.pool-1.1.1 \
+			memcached.1 \
 			${STARTUP_TIME} \
 			"/usr/bin/memcached " \
 			"memcached-tool \
@@ -235,7 +235,7 @@ function test_basic_operations ()
 		end
 
 		__terminate_container \
-			memcached.pool-1.1.1 \
+			memcached.1 \
 		&> /dev/null
 	end
 
@@ -251,8 +251,8 @@ function test_custom_configuration ()
 	local settings_value=""
 	local test_data_output=""
 
-	trap "__terminate_container memcached.pool-1.1.1 &> /dev/null; \
-		__terminate_container memcached.pool-1.1.2 &> /dev/null; \
+	trap "__terminate_container memcached.1 &> /dev/null; \
+		__terminate_container memcached.2 &> /dev/null; \
 		__destroy; \
 		exit 1" \
 		INT TERM EXIT
@@ -260,13 +260,13 @@ function test_custom_configuration ()
 	describe "Customised Memcached configuration"
 		describe "Runs named container"
 			__terminate_container \
-				memcached.pool-1.1.1 \
+				memcached.1 \
 			&> /dev/null
 
 			it "Can publish ${DOCKER_PORT_MAP_TCP_11211}:11211."
 				docker run \
 					--detach \
-					--name memcached.pool-1.1.1 \
+					--name memcached.1 \
 					--publish ${DOCKER_PORT_MAP_TCP_11211}:11211 \
 					--env "MEMCACHED_CACHESIZE=32" \
 					--env "MEMCACHED_MAXCONN=2048" \
@@ -276,7 +276,7 @@ function test_custom_configuration ()
 
 				container_port_11211="$(
 					__get_container_port \
-						memcached.pool-1.1.1 \
+						memcached.1 \
 						11211/tcp
 				)"
 
@@ -294,7 +294,7 @@ function test_custom_configuration ()
 		end
 
 		if ! __is_container_ready \
-			memcached.pool-1.1.1 \
+			memcached.1 \
 			${STARTUP_TIME} \
 			"/usr/bin/memcached " \
 			"memcached-tool \
@@ -374,18 +374,18 @@ function test_custom_configuration ()
 
 		describe "Runs on a private network."
 			__terminate_container \
-				memcached.pool-1.1.1 \
+				memcached.1 \
 			&> /dev/null
 
 			__terminate_container \
-				memcached.pool-1.1.2 \
+				memcached.2 \
 			&> /dev/null
 
 			it "Runs a named server container"
 				docker run \
 					--detach \
-					--name memcached.pool-1.1.1 \
-					--network-alias memcached.pool-1.1.1 \
+					--name memcached.1 \
+					--network-alias memcached.1 \
 					--network ${private_network_1} \
 					jdeathe/centos-ssh-memcached:latest \
 				&> /dev/null
@@ -398,8 +398,8 @@ function test_custom_configuration ()
 			it "Runs a named client container"
 				docker run \
 					--detach \
-					--name memcached.pool-1.1.2 \
-					--network-alias memcached.pool-1.1.2 \
+					--name memcached.2 \
+					--network-alias memcached.2 \
 					--network ${private_network_1} \
 					--env MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=false \
 					jdeathe/centos-ssh-memcached:latest \
@@ -411,7 +411,7 @@ function test_custom_configuration ()
 			end
 
 			if ! __is_container_ready \
-				memcached.pool-1.1.1 \
+				memcached.1 \
 				${STARTUP_TIME} \
 				"/usr/bin/memcached " \
 				"memcached-tool \
@@ -424,7 +424,7 @@ function test_custom_configuration ()
 			fi
 
 			if ! __is_container_ready \
-				memcached.pool-1.1.2 \
+				memcached.2 \
 				${STARTUP_TIME} \
 				"/usr/bin/memcached "
 			then
@@ -435,12 +435,12 @@ function test_custom_configuration ()
 				it "Can set data"
 					docker cp \
 						test/fixtures/lorem-ipsum-base64.txt \
-						memcached.pool-1.1.2:/tmp/lorem-ipsum-base64.txt
+						memcached.2:/tmp/lorem-ipsum-base64.txt
 
 					docker exec \
-						memcached.pool-1.1.2 \
+						memcached.2 \
 							memcp \
-							--servers=memcached.pool-1.1.1:11211 \
+							--servers=memcached.1:11211 \
 							/tmp/lorem-ipsum-base64.txt
 					&> /dev/null
 
@@ -453,9 +453,9 @@ function test_custom_configuration ()
 					# memcat appends a trailing newline if there's a line break.
 					test_data_output="$(
 						docker exec \
-							memcached.pool-1.1.2 \
+							memcached.2 \
 							bash -c "memcat \
-								--servers=memcached.pool-1.1.1:11211 \
+								--servers=memcached.1:11211 \
 								lorem-ipsum-base64.txt \
 							| awk 'NR > 1 { print line; } \
 								{ line = \$0; } \
@@ -469,15 +469,15 @@ function test_custom_configuration ()
 
 				it "Can flush data"
 					docker exec \
-						memcached.pool-1.1.2 \
+						memcached.2 \
 						memflush \
-							--servers=memcached.pool-1.1.1:11211
+							--servers=memcached.1:11211
 
 					test_data_output="$(
 						docker exec \
-							memcached.pool-1.1.2 \
+							memcached.2 \
 							bash -c "memcat \
-								--servers=memcached.pool-1.1.1:11211 \
+								--servers=memcached.1:11211 \
 								lorem-ipsum-base64.txt \
 							2> /dev/null \
 							| awk 'NR > 1 { print line; } \
@@ -493,22 +493,22 @@ function test_custom_configuration ()
 		end
 
 		__terminate_container \
-			memcached.pool-1.1.1 \
+			memcached.1 \
 		&> /dev/null
 
 		__terminate_container \
-			memcached.pool-1.1.2 \
+			memcached.2 \
 		&> /dev/null
 	end
 
 	describe "Configure autostart"
 		__terminate_container \
-			memcached.pool-1.1.1 \
+			memcached.1 \
 		&> /dev/null
 
 		docker run \
 			--detach \
-			--name memcached.pool-1.1.1 \
+			--name memcached.1 \
 			--env MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=false \
 			jdeathe/centos-ssh-memcached:latest \
 		&> /dev/null
@@ -517,11 +517,11 @@ function test_custom_configuration ()
 
 		it "Can disable memcached-wrapper."
 			docker ps \
-				--filter "name=memcached.pool-1.1.1" \
+				--filter "name=memcached.1" \
 				--filter "health=healthy" \
 			&> /dev/null \
 			&& docker top \
-				memcached.pool-1.1.1 \
+				memcached.1 \
 			| grep -qE '/usr/bin/memcached '
 
 			assert equal \
@@ -530,7 +530,7 @@ function test_custom_configuration ()
 		end
 
 		__terminate_container \
-			memcached.pool-1.1.1 \
+			memcached.1 \
 		&> /dev/null
 	end
 
@@ -546,7 +546,7 @@ function test_healthcheck ()
 	local events_since_timestamp
 	local health_status
 
-	trap "__terminate_container memcached.pool-1.1.1 &> /dev/null; \
+	trap "__terminate_container memcached.1 &> /dev/null; \
 		__destroy; \
 		exit 1" \
 		INT TERM EXIT
@@ -554,12 +554,12 @@ function test_healthcheck ()
 	describe "Healthcheck"
 		describe "Default configuration"
 			__terminate_container \
-				memcached.pool-1.1.1 \
+				memcached.1 \
 			&> /dev/null
 
 			docker run \
 				--detach \
-				--name memcached.pool-1.1.1 \
+				--name memcached.1 \
 				jdeathe/centos-ssh-memcached:latest \
 			&> /dev/null
 
@@ -571,7 +571,7 @@ function test_healthcheck ()
 				health_status="$(
 					docker inspect \
 						--format='{{json .State.Health.Status}}' \
-						memcached.pool-1.1.1
+						memcached.1
 				)"
 
 				assert __shpec_matcher_egrep \
@@ -590,7 +590,7 @@ function test_healthcheck ()
 
 				health_status="$(
 					test/health_status \
-						--container=memcached.pool-1.1.1 \
+						--container=memcached.1 \
 						--since="${events_since_timestamp}" \
 						--timeout="${events_timeout}" \
 						--monochrome \
@@ -605,12 +605,12 @@ function test_healthcheck ()
 			it "Returns unhealthy on failure."
 				# wrapper failure
 				docker exec -t \
-					memcached.pool-1.1.1 \
+					memcached.1 \
 					bash -c "mv \
 						/usr/bin/memcached \
 						/usr/bin/memcached2" \
 				&& docker exec -t \
-					memcached.pool-1.1.1 \
+					memcached.1 \
 					bash -c "if [[ -n \$(pgrep -f '^/usr/bin/memcached ') ]]; then \
 						kill -9 \$(pgrep -f '^/usr/bin/memcached ')
 					fi"
@@ -629,7 +629,7 @@ function test_healthcheck ()
 
 				health_status="$(
 					test/health_status \
-						--container=memcached.pool-1.1.1 \
+						--container=memcached.1 \
 						--since="$(( ${event_lag_seconds} + ${events_since_timestamp} ))" \
 						--timeout="${events_timeout}" \
 						--monochrome \
@@ -642,7 +642,7 @@ function test_healthcheck ()
 			end
 
 			__terminate_container \
-				memcached.pool-1.1.1 \
+				memcached.1 \
 			&> /dev/null
 		end
 	end
