@@ -33,11 +33,11 @@ For cases where access to docker exec is not possible the preferred method is to
 
 ## Quick Example
 
-Run up a container named `memcached.pool-1.1.1` from the docker image `jdeathe/centos-ssh-memcached` on port 11211 of your docker host.
+Run up a container named `memcached.1` from the docker image `jdeathe/centos-ssh-memcached` on port 11211 of your docker host.
 
 ```
 $ docker run -d \
-  --name memcached.pool-1.1.1 \
+  --name memcached.1 \
   -p 11211:11211/tcp \
   --sysctl "net.core.somaxconn=1024" \
   jdeathe/centos-ssh-memcached:2.1.1
@@ -46,14 +46,14 @@ $ docker run -d \
 Now you can verify it is initialised and running successfully by inspecting the container's logs.
 
 ```
-$ docker logs memcached.pool-1.1.1
+$ docker logs memcached.1
 ```
 
 To verify the Memcached service status:
 
 ```
 $ docker exec -it \
-  memcached.pool-1.1.1 \
+  memcached.1 \
   memcached-tool localhost stats
 ```
 
@@ -68,12 +68,12 @@ In the following example the memcached service is bound to port 11211 of the doc
 #### Using environment variables
 
 ```
-$ docker stop memcached.pool-1.1.1 && \
-  docker rm memcached.pool-1.1.1
+$ docker stop memcached.1 && \
+  docker rm memcached.1
 $ docker run \
   --detach \
   --tty \
-  --name memcached.pool-1.1.1 \
+  --name memcached.1 \
   --publish 11211:11211/tcp \
   --sysctl "net.core.somaxconn=1024" \
   --sysctl "net.ipv4.ip_local_port_range=1024 65535" \

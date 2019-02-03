@@ -11,11 +11,16 @@ CentOS-7 7.5.1804 x86_64 - Memcached 1.4.
 - Updates source image to [2.5.0](https://github.com/jdeathe/centos-ssh/releases/tag/2.5.0).
 - Updates and restructures Dockerfile.
 - Updates default HEALTHCHECK interval to 1 second from 0.5.
+- Updates container naming conventions and readability of `Makefile`.
+- Fixes issue with unexpected published port in run templates when `DOCKER_PORT_MAP_TCP_11211` is set to an empty string or 0.
 - Adds placeholder replacement of `RELEASE_VERSION` docker argument to systemd service unit template.
 - Adds error messages to healthcheck script and includes supervisord check.
 - Adds consideration for event lag into test cases for unhealthy health_status events.
+- Adds port incrementation to Makefile's run template for container names with an instance suffix.
 - Removes use of `/etc/services-config` paths.
 - Removes X-Fleet section from etcd register template unit-file.
+- Removes the unused group element from the default container name.
+- Removes the node element from the default container name.
 
 ### 2.1.1 - 2018-11-16
 
