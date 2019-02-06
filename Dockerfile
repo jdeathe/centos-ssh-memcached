@@ -1,10 +1,10 @@
-# =============================================================================
-# jdeathe/centos-ssh-memcached
-#
-# CentOS-6, Memcached 1.4.
-# =============================================================================
-FROM jdeathe/centos-ssh:1.9.1
+FROM jdeathe/centos-ssh:1.10.0
 
+ARG RELEASE_VERSION="1.2.1"
+
+# ------------------------------------------------------------------------------
+# Base install of required packages
+# ------------------------------------------------------------------------------
 RUN rpm --rebuilddb \
 	&& yum -y install \
 			--setopt=tsflags=nodocs \
@@ -17,42 +17,43 @@ RUN rpm --rebuilddb \
 	&& rm -rf /var/cache/yum/* \
 	&& yum clean all
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copy files into place
-# -----------------------------------------------------------------------------
-ADD src/usr/bin \
-	/usr/bin/
-ADD src/usr/sbin \
-	/usr/sbin/
+# ------------------------------------------------------------------------------
+ADD src/etc \
+	/etc/
 ADD src/opt/scmi \
 	/opt/scmi/
-ADD src/etc/services-config/supervisor/supervisord.d \
-	/etc/services-config/supervisor/supervisord.d/
-ADD src/etc/systemd/system \
-	/etc/systemd/system/
+ADD src/usr \
+	/usr/
 
-RUN ln -sf \
-		/etc/services-config/supervisor/supervisord.d/memcached-wrapper.conf \
+# ------------------------------------------------------------------------------
+# Provisioning
+# - Set permissions
+# ------------------------------------------------------------------------------
+RUN sed -i \
+		-e "s~{{RELEASE_VERSION}}~${RELEASE_VERSION}~g" \
+		/etc/systemd/system/centos-ssh-memcached@.service \
+	&& chmod 644 \
 		/etc/supervisord.d/memcached-wrapper.conf \
 	&& chmod 700 \
 		/usr/{bin/healthcheck,sbin/memcached-wrapper}
 
 EXPOSE 11211
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Set default environment variables
-# -----------------------------------------------------------------------------
-ENV MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=true \
+# ------------------------------------------------------------------------------
+ENV MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER="true" \
 	MEMCACHED_CACHESIZE="64" \
 	MEMCACHED_MAXCONN="1024" \
 	MEMCACHED_OPTIONS="-U 0" \
-	SSH_AUTOSTART_SSHD=false \
-	SSH_AUTOSTART_SSHD_BOOTSTRAP=false
+	SSH_AUTOSTART_SSHD="false" \
+	SSH_AUTOSTART_SSHD_BOOTSTRAP="false"
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Set image metadata
-# -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="1.2.1"
+# ------------------------------------------------------------------------------
 LABEL \
 	maintainer="James Deathe <james.deathe@gmail.com>" \
 	install="docker run \
@@ -82,7 +83,7 @@ jdeathe/centos-ssh-memcached:${RELEASE_VERSION} \
 	org.deathe.description="CentOS-6 6.10 x86_64 - Memcached 1.4."
 
 HEALTHCHECK \
-	--interval=0.5s \
+	--interval=1s \
 	--timeout=1s \
 	--retries=4 \
 	CMD ["/usr/bin/healthcheck"]

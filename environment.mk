@@ -1,6 +1,6 @@
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Constants
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 DOCKER_USER := jdeathe
 DOCKER_IMAGE_NAME := centos-ssh-memcached
 SHPEC_ROOT := test/shpec
@@ -9,9 +9,9 @@ SHPEC_ROOT := test/shpec
 DOCKER_IMAGE_TAG_PATTERN := ^(latest|centos-6|((1|centos-6-1)\.[0-9]+\.[0-9]+))$
 DOCKER_IMAGE_RELEASE_TAG_PATTERN := ^(1|centos-6-1)\.[0-9]+\.[0-9]+$
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Variables
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Docker --sysctl settings
 SYSCTL_NET_CORE_SOMAXCONN ?= 1024
@@ -21,7 +21,7 @@ SYSCTL_NET_IPV4_ROUTE_FLUSH ?= 1
 # Docker image/container settings
 DOCKER_CONTAINER_OPTS ?=
 DOCKER_IMAGE_TAG ?= latest
-DOCKER_NAME ?= memcached.pool-1.1.1
+DOCKER_NAME ?= memcached.1
 DOCKER_PORT_MAP_TCP_22 ?= NULL
 DOCKER_PORT_MAP_TCP_11211 ?= 11211
 DOCKER_PORT_MAP_UDP_11211 ?= NULL

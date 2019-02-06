@@ -1,4 +1,76 @@
 
+# Handle incrementing the docker host port for instances unless a port range is defined.
+DOCKER_PUBLISH := $(shell \
+	if [[ "$(DOCKER_PORT_MAP_TCP_11211)" != NULL ]]; \
+	then \
+		if grep -qE \
+				'^([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:)?[1-9][0-9]*$$' \
+				<<< "$(DOCKER_PORT_MAP_TCP_11211)" \
+			&& grep -qE \
+				'^.+\.[0-9]+(\.[0-9]+)?$$' \
+				<<< "$(DOCKER_NAME)"; \
+		then \
+			printf -- ' --publish %s%s:11211/tcp' \
+				"$$(\
+					grep -o '^[0-9\.]*:' \
+						<<< "$(DOCKER_PORT_MAP_TCP_11211)" \
+				)" \
+				"$$(( \
+					$$(\
+						grep -oE \
+							'[0-9]+$$' \
+							<<< "$(DOCKER_PORT_MAP_TCP_11211)" \
+					) \
+					+ $$(\
+						grep -oE \
+							'([0-9]+)(\.[0-9]+)?$$' \
+							<<< "$(DOCKER_NAME)" \
+						| awk -F. \
+							'{ print $$1; }' \
+					) \
+					- 1 \
+				))"; \
+		else \
+			printf -- ' --publish %s:11211/tcp' \
+				"$(DOCKER_PORT_MAP_TCP_11211)"; \
+		fi; \
+	fi; \
+	if [[ "$(DOCKER_PORT_MAP_UDP_11211)" != NULL ]]; \
+	then \
+		if grep -qE \
+				'^([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:)?[1-9][0-9]*$$' \
+				<<< "$(DOCKER_PORT_MAP_UDP_11211)" \
+			&& grep -qE \
+				'^.+\.[0-9]+(\.[0-9]+)?$$' \
+				<<< "$(DOCKER_NAME)"; \
+		then \
+			printf -- ' --publish %s%s:11211/udp' \
+				"$$(\
+					grep -o '^[0-9\.]*:' \
+						<<< "$(DOCKER_PORT_MAP_UDP_11211)" \
+				)" \
+				"$$(( \
+					$$(\
+						grep -oE \
+							'[0-9]+$$' \
+							<<< "$(DOCKER_PORT_MAP_UDP_11211)" \
+					) \
+					+ $$(\
+						grep -oE \
+							'([0-9]+)(\.[0-9]+)?$$' \
+							<<< "$(DOCKER_NAME)" \
+						| awk -F. \
+							'{ print $$1; }' \
+					) \
+					- 1 \
+				))"; \
+		else \
+			printf -- ' --publish %s:11211/udp' \
+				"$(DOCKER_PORT_MAP_UDP_11211)"; \
+		fi; \
+	fi; \
+)
+
 # Common parameters of create and run targets
 define DOCKER_CONTAINER_PARAMETERS
 --name $(DOCKER_NAME) \
@@ -11,8 +83,3 @@ define DOCKER_CONTAINER_PARAMETERS
 --env "MEMCACHED_MAXCONN=$(MEMCACHED_MAXCONN)" \
 --env "MEMCACHED_OPTIONS=$(MEMCACHED_OPTIONS)"
 endef
-
-DOCKER_PUBLISH := $(shell \
-	if [[ $(DOCKER_PORT_MAP_TCP_11211) != NULL ]]; then printf -- '--publish %s:11211/tcp\n' $(DOCKER_PORT_MAP_TCP_11211); fi; \
-	if [[ $(DOCKER_PORT_MAP_UDP_11211) != NULL ]]; then printf -- '--publish %s:11211/udp\n' $(DOCKER_PORT_MAP_UDP_11211); fi; \
-)
