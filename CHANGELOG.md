@@ -21,6 +21,7 @@ CentOS-6 6.10 x86_64 - Memcached 1.4.
 - Removes X-Fleet section from etcd register template unit-file.
 - Removes the unused group element from the default container name.
 - Removes the node element from the default container name.
+- Removes unused environment variables from Makefile and scmi configuration.
 
 ### 1.2.1 - 2018-11-16
 

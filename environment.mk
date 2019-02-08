@@ -22,7 +22,6 @@ SYSCTL_NET_IPV4_ROUTE_FLUSH ?= 1
 DOCKER_CONTAINER_OPTS ?=
 DOCKER_IMAGE_TAG ?= latest
 DOCKER_NAME ?= memcached.1
-DOCKER_PORT_MAP_TCP_22 ?= NULL
 DOCKER_PORT_MAP_TCP_11211 ?= 11211
 DOCKER_PORT_MAP_UDP_11211 ?= NULL
 DOCKER_RESTART_POLICY ?= always
@@ -38,20 +37,6 @@ STARTUP_TIME ?= 1
 
 # ------------------------------------------------------------------------------
 # Application container configuration
-# ------------------------------------------------------------------------------
-SSH_AUTHORIZED_KEYS ?=
-SSH_AUTOSTART_SSHD ?= false
-SSH_AUTOSTART_SSHD_BOOTSTRAP ?= false
-SSH_CHROOT_DIRECTORY ?= %h
-SSH_INHERIT_ENVIRONMENT ?= false
-SSH_SUDO ?= ALL=(ALL) ALL
-SSH_USER ?= app-admin
-SSH_USER_FORCE_SFTP ?= false
-SSH_USER_HOME ?= /home/%u
-SSH_USER_ID ?= 500:500
-SSH_USER_PASSWORD ?=
-SSH_USER_PASSWORD_HASHED ?= false
-SSH_USER_SHELL ?= /bin/bash
 # ------------------------------------------------------------------------------
 MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER ?= true
 MEMCACHED_CACHESIZE ?= 64
