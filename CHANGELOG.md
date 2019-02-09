@@ -17,6 +17,8 @@ CentOS-6 6.10 x86_64 - Memcached 1.4.
 - Adds error messages to healthcheck script and includes supervisord check.
 - Adds consideration for event lag into test cases for unhealthy health_status events.
 - Adds port incrementation to Makefile's run template for container names with an instance suffix.
+- Adds improved memcached-wrapper script including optional Details output.
+- Adds validation on `MEMCACHED_CACHESIZE` and `MEMCACHED_MAXCONN` - fails back to default if not a positive non-zero integer.
 - Removes use of `/etc/services-config` paths.
 - Removes X-Fleet section from etcd register template unit-file.
 - Removes the unused group element from the default container name.
