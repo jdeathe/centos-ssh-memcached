@@ -1,0 +1,42 @@
+# ------------------------------------------------------------------------------
+# Ref: https://docs.docker.com/compose/compose-file/
+#
+# Setup:
+# docker-compose build
+# docker-compose down
+#
+# Run Default example:
+# docker-compose up -d
+#
+# Memcached usage:
+# docker-compose exec memcached memcached-tool
+# docker-compose exec memcached memcached-tool localhost stats
+# docker-compose exec memcached memflush --servers=localhost
+# docker-compose exec memcached memslap --servers=localhost --concurrency=128
+# ------------------------------------------------------------------------------
+version: "3.0"
+services:
+  memcached:
+    build:
+      context: "."
+      dockerfile: "Dockerfile"
+    environment:
+      MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER: "true"
+      MEMCACHED_CACHESIZE: "${MEMCACHED_CACHESIZE}"
+      MEMCACHED_MAXCONN: "${MEMCACHED_MAXCONN}"
+      MEMCACHED_OPTIONS: "${MEMCACHED_OPTIONS}"
+    image: "jdeathe/centos-ssh-memcached:latest"
+    ports:
+      - "11211:11211"
+    restart: "always"
+    sysctls:
+      net.core.somaxconn: "1024"
+      net.ipv4.ip_local_port_range: "1024 65535"
+      net.ipv4.route.flush: "1"
+    tty: false
+    ulimits:
+      memlock: 82000
+      nofile:
+        soft: 524288
+        hard: 1048576
+      nproc: 65535
