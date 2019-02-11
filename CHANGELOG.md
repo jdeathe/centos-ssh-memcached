@@ -20,11 +20,13 @@ CentOS-7 7.5.1804 x86_64 - Memcached 1.4.
 - Adds improved memcached-wrapper script including optional Details output.
 - Adds validation on `MEMCACHED_CACHESIZE` and `MEMCACHED_MAXCONN` - fails back to default if not a positive non-zero integer.
 - Adds docker-compose configuration example.
+- Adds improved logging output.
 - Removes use of `/etc/services-config` paths.
 - Removes X-Fleet section from etcd register template unit-file.
 - Removes the unused group element from the default container name.
 - Removes the node element from the default container name.
 - Removes unused environment variables from Makefile and scmi configuration.
+- Removes container log file `/var/log/memcached.log`.
 
 ### 2.1.1 - 2018-11-16
 
