@@ -24,4 +24,4 @@ readonly SERVICE_UNIT_REGISTER_ENVIRONMENT_KEYS="
 # ------------------------------------------------------------------------------
 # Variables
 # ------------------------------------------------------------------------------
-SERVICE_UNIT_INSTALL_TIMEOUT="${SERVICE_UNIT_INSTALL_TIMEOUT:-5}"
+SERVICE_UNIT_INSTALL_TIMEOUT="${SERVICE_UNIT_INSTALL_TIMEOUT:-4}"

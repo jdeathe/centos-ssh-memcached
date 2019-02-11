@@ -33,7 +33,7 @@ NO_CACHE ?= false
 DIST_PATH ?= ./dist
 
 # Number of seconds expected to complete container startup including bootstrap.
-STARTUP_TIME ?= 2
+STARTUP_TIME ?= 1
 
 # ------------------------------------------------------------------------------
 # Application container configuration
