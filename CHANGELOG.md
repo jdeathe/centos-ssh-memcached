@@ -6,7 +6,7 @@ Summary of release changes for Version 2.
 
 CentOS-7 7.5.1804 x86_64 - Memcached 1.4.
 
-### 2.2.0 - Unreleased
+### 2.2.0 - 2019-02-12
 
 - Updates source image to [2.5.0](https://github.com/jdeathe/centos-ssh/releases/tag/2.5.0).
 - Updates and restructures Dockerfile.
