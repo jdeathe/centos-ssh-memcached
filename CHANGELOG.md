@@ -6,7 +6,7 @@ Summary of release changes for Version 1.
 
 CentOS-6 6.10 x86_64 - Memcached 1.4.
 
-### 1.3.0 - Unreleased
+### 1.3.0 - 2019-02-12
 
 - Updates source image to [1.10.0](https://github.com/jdeathe/centos-ssh/releases/tag/1.10.0).
 - Updates and restructures Dockerfile.
