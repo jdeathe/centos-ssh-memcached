@@ -8,12 +8,12 @@ Docker Image including:
 
 ## Overview & links
 
-The latest CentOS-6 / CentOS-7 based releases can be pulled from the `centos-6` / `centos-7` Docker tags respectively. For production use it is recommended to select a specific release tag - the convention is `centos-6-1.2.1` OR `1.2.1` for the [1.2.1](https://github.com/jdeathe/centos-ssh-memcached/tree/1.2.1) release tag and `centos-7-2.2.1` OR `2.2.1` for the [2.2.1](https://github.com/jdeathe/centos-ssh/tree/2.2.1) release tag.
+The latest CentOS-6 / CentOS-7 based releases can be pulled from the `centos-6` / `centos-7` Docker tags respectively. For production use it is recommended to select a specific release tag - the convention is `centos-6-1.3.0` OR `1.3.0` for the [1.3.0](https://github.com/jdeathe/centos-ssh-memcached/tree/1.3.0) release tag and `centos-7-2.2.0` OR `2.2.0` for the [2.2.0](https://github.com/jdeathe/centos-ssh/tree/2.2.0) release tag.
 
 ### Tags and respective `Dockerfile` links
 
-- `centos-7`,`centos-7-2.2.1`,`2.2.1` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-7/Dockerfile)
-- `centos-6`,`centos-6-1.2.1`,`1.2.1` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-6/Dockerfile)
+- `centos-7`,`centos-7-2.2.0`,`2.2.0` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-7/Dockerfile)
+- `centos-6`,`centos-6-1.3.0`,`1.3.0` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-6/Dockerfile)
 
 Included in the build are the [SCL](https://www.softwarecollections.org/), [EPEL](http://fedoraproject.org/wiki/EPEL) and [IUS](https://ius.io) repositories. Installed packages include [OpenSSH](http://www.openssh.com/portable.html) secure shell, [vim-minimal](http://www.vim.org/), are installed along with python-setuptools, [supervisor](http://supervisord.org/) and [supervisor-stdout](https://github.com/coderanger/supervisor-stdout).
 
@@ -33,27 +33,27 @@ For cases where access to docker exec is not possible the preferred method is to
 
 ## Quick Example
 
-Run up a container named `memcached.pool-1.1.1` from the docker image `jdeathe/centos-ssh-memcached` on port 11211 of your docker host.
+Run up a container named `memcached.1` from the docker image `jdeathe/centos-ssh-memcached` on port 11211 of your docker host.
 
 ```
 $ docker run -d \
-  --name memcached.pool-1.1.1 \
+  --name memcached.1 \
   -p 11211:11211/tcp \
   --sysctl "net.core.somaxconn=1024" \
-  jdeathe/centos-ssh-memcached:2.2.1
+  jdeathe/centos-ssh-memcached:2.2.0
 ```
 
 Now you can verify it is initialised and running successfully by inspecting the container's logs.
 
 ```
-$ docker logs memcached.pool-1.1.1
+$ docker logs memcached.1
 ```
 
 To verify the Memcached service status:
 
 ```
 $ docker exec -it \
-  memcached.pool-1.1.1 \
+  memcached.1 \
   memcached-tool localhost stats
 ```
 
@@ -68,18 +68,18 @@ In the following example the memcached service is bound to port 11211 of the doc
 #### Using environment variables
 
 ```
-$ docker stop memcached.pool-1.1.1 && \
-  docker rm memcached.pool-1.1.1
+$ docker stop memcached.1 && \
+  docker rm memcached.1
 $ docker run \
   --detach \
   --tty \
-  --name memcached.pool-1.1.1 \
+  --name memcached.1 \
   --publish 11211:11211/tcp \
   --sysctl "net.core.somaxconn=1024" \
   --sysctl "net.ipv4.ip_local_port_range=1024 65535" \
   --sysctl "net.ipv4.route.flush=1" \
   --env "MEMCACHED_CACHESIZE=32" \
-  jdeathe/centos-ssh-memcached:2.2.1
+  jdeathe/centos-ssh-memcached:2.2.0
 ```
 
 #### Environment Variables
