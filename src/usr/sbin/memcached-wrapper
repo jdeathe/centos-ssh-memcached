@@ -1,21 +1,161 @@
 #!/usr/bin/env bash
 
-readonly DAEMON_OPTS="
- -u memcached
- -p 11211
- -m ${MEMCACHED_CACHESIZE:-64}
- -c ${MEMCACHED_MAXCONN:-1024}
- ${MEMCACHED_OPTIONS:-}
-"
-readonly MEMCACHED=/usr/bin/memcached
-readonly NICE=/bin/nice
-readonly NICENESS=${MEMCACHED_NICENESS:-0}
+readonly TIMER_START="$(
+	date +%s.%N
+)"
 
-printf -- \
-	"Starting Memcached: %s" \
-	"${DAEMON_OPTS}"
+function __is_valid_memcached_cachesize ()
+{
+	local -r non_zero_integer='^[1-9][0-9]*$'
+	local -r value="${1}"
 
-exec ${NICE} \
-	-n ${NICENESS} \
-	${MEMCACHED} \
-	${DAEMON_OPTS}
+	if [[ ${value} =~ ${non_zero_integer} ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
+function __is_valid_memcached_maxconn ()
+{
+	local -r non_zero_integer='^[1-9][0-9]*$'
+	local -r value="${1}"
+
+	if [[ ${value} =~ ${non_zero_integer} ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
+function __get_memcached_cachesize ()
+{
+	local -r default_value="${1:-64}"
+
+	local value="${MEMCACHED_CACHESIZE}"
+
+	if ! __is_valid_memcached_cachesize "${value}"
+	then
+		value="${default_value}"
+	fi
+
+	printf -- '%s' "${value}"
+}
+
+function __get_memcached_maxconn ()
+{
+	local -r default_value="${1:-1024}"
+
+	local value="${MEMCACHED_MAXCONN}"
+
+	if ! __is_valid_memcached_maxconn "${value}"
+	then
+		value="${default_value}"
+	fi
+
+	printf -- '%s' "${value}"
+}
+
+function __get_memcached_options ()
+{
+	local value="${MEMCACHED_OPTIONS}"
+
+	printf -- '%s' "${value}"
+}
+
+function __get_options ()
+{
+	local -r cachesize="${1:-"$(
+		__get_memcached_cachesize
+	)"}"
+	local -r maxconn="${2:-"$(
+		__get_memcached_maxconn
+	)"}"
+	local -r options="${3:-"$(
+		__get_memcached_options
+	)"}"
+	local -r port="11211"
+	local -r user="memcached"
+
+	printf -- \
+		'-u %s -p %u -m %u -c %u%s%s' \
+		"${user}" \
+		"${port}" \
+		"${cachesize}" \
+		"${maxconn}" \
+		"${options:+" "}" \
+		"${options}"
+}
+
+function main ()
+{
+	local -r bin="/usr/bin/memcached"
+	local -r memcached_cachesize="$(
+		__get_memcached_cachesize
+	)"
+	local -r memcached_maxconn="$(
+		__get_memcached_maxconn
+	)"
+	local -r memcached_options="$(
+		__get_memcached_options
+	)"
+	local -r nice="/bin/nice"
+	local -r niceness="0"
+	local -r options="$(
+		__get_options \
+			"${memcached_cachesize}" \
+			"${memcached_maxconn}" \
+			"${memcached_options}"
+	)"
+
+	local timer_total
+	local verbose=false
+
+	# Parse options
+	while [[ "${#}" -gt 0 ]]
+	do
+		case "${1}" in
+			-v|--verbose)
+				verbose=true
+				shift 1
+				;;
+		esac
+	done
+
+	if [[ ${verbose} == true ]]
+	then
+		timer_total="$(
+			awk \
+				-v timer_end="$(
+					date +%s.%N
+				)" \
+				-v timer_start="${TIMER_START}" \
+				'BEGIN { print \
+					timer_end - timer_start;
+				}'
+		)"
+
+		cat \
+			<<-EOT
+
+			================================================================================
+			Memcached Details
+			--------------------------------------------------------------------------------
+			cachesize : ${memcached_cachesize}
+			maxconn: ${memcached_maxconn}
+			memcached options: ${memcached_options}
+			--------------------------------------------------------------------------------
+			${timer_total}
+
+		EOT
+	fi
+
+	exec ${nice} \
+		-n ${niceness} \
+		${bin} \
+		${options}
+}
+
+main "${@}"
