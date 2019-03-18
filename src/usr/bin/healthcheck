@@ -2,37 +2,40 @@
 
 set -e
 
-if ! ps axo command \
-	| grep -qE '^/usr/bin/python /usr/bin/supervisord'
-then
-	>&2 printf -- \
-		'%s\n' \
-		"supervisord not running."
-	exit 1
-fi
-
-if [[ ${MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER} == true ]]
-then
+function main ()
+{
 	if ! ps axo command \
-		| grep -qE '^/usr/bin/memcached '
+		| grep -qE '^/usr/bin/python /usr/bin/supervisord'
 	then
 		>&2 printf -- \
 			'%s\n' \
-			"memcached not running."
+			"supervisord not running."
 		exit 1
 	fi
 
-	if ! memcached-tool \
-			127.0.0.1:11211 \
-			stats \
-		| grep -qP \
-			'[ ]+accepting_conns[ ]+1[^0-9]*$'
+	if [[ ${MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER} == true ]]
 	then
-		>&2 printf -- \
-			'%s\n' \
-			"memcached not accepting connections."
-		exit 1
-	fi
-fi
+		if ! ps axo command \
+			| grep -qE '^/usr/bin/memcached '
+		then
+			>&2 printf -- \
+				'%s\n' \
+				"memcached not running."
+			exit 1
+		fi
 
-exit 0
+		if ! memcached-tool \
+				127.0.0.1:11211 \
+				stats \
+			| grep -qP \
+				'[ ]+accepting_conns[ ]+1[^0-9]*$'
+		then
+			>&2 printf -- \
+				'%s\n' \
+				"memcached not accepting connections."
+			exit 1
+		fi
+	fi
+}
+
+main "${@}"

@@ -26,7 +26,8 @@
 #     sudo systemctl enable -f {service-unit-instance-name}
 #
 # Start using:
-#     sudo systemctl [start|stop|restart|kill|status] {service-unit-instance-name}
+#     sudo systemctl [start|stop|restart|kill|status] \
+#       {service-unit-instance-name}
 #
 # Debugging:
 #     sudo systemctl status {service-unit-instance-name}
@@ -34,6 +35,7 @@
 #
 # To uninstall:
 #     sudo systemctl disable -f {service-unit-instance-name}
+#     sudo systemctl daemon-reload
 #     sudo systemctl stop {service-unit-instance-name}
 #     sudo rm /etc/systemd/system/{service-unit-template-name}
 #     sudo docker rm -f {service-unit-long-name}
@@ -65,20 +67,12 @@ Environment="SYSCTL_NET_IPV4_ROUTE_FLUSH=1"
 
 # Initialisation: Load image from local storage if available, otherwise pull.
 ExecStartPre=/bin/bash -c \
-  "if [[ -z $( \
-      if [[ -n $(/usr/bin/docker images -q \
-          ${DOCKER_USER}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} \
-        ) ]]; \
-      then \
-        echo $(/usr/bin/docker images -q \
-          ${DOCKER_USER}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} \
-        ); \
-      else \
-        echo $(/usr/bin/docker images -q \
-          docker.io/${DOCKER_USER}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} \
-        ); \
-      fi; \
-    ) ]]; \
+  "if [[ -z \"$(/usr/bin/docker images -q \
+      ${DOCKER_USER}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} \
+    )\" ]] \
+    && [[ -z \"$(/usr/bin/docker images -q \
+      docker.io/${DOCKER_USER}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} \
+    )\" ]]; \
   then \
     if [[ -f ${DOCKER_IMAGE_PACKAGE_PATH}/${DOCKER_USER}/${DOCKER_IMAGE_NAME}.${DOCKER_IMAGE_TAG}.tar.xz ]]; \
     then \
@@ -140,7 +134,7 @@ ExecStart=/bin/bash -c \
           <<< \"${DOCKER_PORT_MAP_TCP_11211}\"; \
         && /usr/bin/grep -qE \
           '^.+\.[0-9]+(\.[0-9]+)?$' \
-          <<< "${DOCKER_NAME}"
+          <<< %p.%i; \
       then \
         printf -- '--publish %%s%%s:11211/tcp' \
           $(\
@@ -173,7 +167,7 @@ ExecStart=/bin/bash -c \
           <<< \"${DOCKER_PORT_MAP_UDP_11211}\"; \
         && /usr/bin/grep -qE \
           '^.+\.[0-9]+(\.[0-9]+)?$' \
-          <<< "${DOCKER_NAME}"
+          <<< %p.%i; \
       then \
         printf -- '--publish %%s%%s:11211/udp' \
           $(\
