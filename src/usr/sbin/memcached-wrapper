@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-readonly TIMER_START="$(
-	date +%s.%N
-)"
+set -e
 
 function __is_valid_memcached_cachesize ()
 {
@@ -92,24 +90,16 @@ function __get_options ()
 function main ()
 {
 	local -r bin="/usr/bin/memcached"
-	local -r memcached_cachesize="$(
-		__get_memcached_cachesize
-	)"
-	local -r memcached_maxconn="$(
-		__get_memcached_maxconn
-	)"
-	local -r memcached_options="$(
-		__get_memcached_options
-	)"
 	local -r nice="/bin/nice"
 	local -r niceness="0"
-	local -r options="$(
-		__get_options \
-			"${memcached_cachesize}" \
-			"${memcached_maxconn}" \
-			"${memcached_options}"
+	local -r timer_start="$(
+		date +%s.%N
 	)"
 
+	local memcached_cachesize
+	local memcached_maxconn
+	local memcached_options
+	local options
 	local timer_total
 	local verbose=false
 
@@ -126,12 +116,29 @@ function main ()
 
 	if [[ ${verbose} == true ]]
 	then
+		memcached_cachesize="$(
+			__get_memcached_cachesize
+		)"
+		memcached_maxconn="$(
+			__get_memcached_maxconn
+		)"
+		memcached_options="$(
+			__get_memcached_options
+		)"
+
+		options="$(
+			__get_options \
+				"${memcached_cachesize}" \
+				"${memcached_maxconn}" \
+				"${memcached_options}"
+		)"
+
 		timer_total="$(
 			awk \
 				-v timer_end="$(
 					date +%s.%N
 				)" \
-				-v timer_start="${TIMER_START}" \
+				-v timer_start="${timer_start}" \
 				'BEGIN { print \
 					timer_end - timer_start;
 				}'
@@ -150,6 +157,10 @@ function main ()
 			${timer_total}
 
 		EOT
+	else
+		options="$(
+			__get_options
+		)"
 	fi
 
 	exec ${nice} \

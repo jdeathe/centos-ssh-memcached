@@ -35,6 +35,7 @@
 #
 # To uninstall:
 #     sudo systemctl disable -f {service-unit-instance-name}
+#     sudo systemctl daemon-reload
 #     sudo rm /etc/systemd/system/{service-unit-template-name}
 #     sudo systemctl daemon-reload
 # ------------------------------------------------------------------------------
@@ -91,7 +92,7 @@ ExecStart=/bin/bash -c \
         \"$(/usr/bin/docker port \
             {{SERVICE_UNIT_NAME}}.%i \
             11211 \
-          | /usr/bin/sed 's~^[0-9.]*:~~' \
+          | /bin/sed 's~^[0-9.]*:~~' \
         )\" \
         --ttl ${REGISTER_TTL} 2> /dev/null; \
     fi; \
@@ -104,7 +105,7 @@ ExecStart=/bin/bash -c \
         \"$(/usr/bin/docker port \
             {{SERVICE_UNIT_NAME}}.%i \
             11211 \
-          | /usr/bin/sed 's~^[0-9.]*:~~' \
+          | /bin/sed 's~^[0-9.]*:~~' \
         )\" \
         --ttl ${REGISTER_TTL} 2> /dev/null; \
     fi; \
@@ -129,15 +130,15 @@ ExecStart=/bin/bash -c \
             ${REGISTER_KEY_ROOT}/ports/tcp/11211 \
           &> /dev/null; \
         then \
-          echo set; \
+          printf -- 'set\n'; \
         else \
-          echo update; \
+          printf -- 'update\n'; \
         fi) \
         ${REGISTER_KEY_ROOT}/ports/tcp/11211 \
         \"$(/usr/bin/docker port \
             {{SERVICE_UNIT_NAME}}.%i \
             11211 \
-          | /usr/bin/sed 's~^[0-9.]*:~~' \
+          | /bin/sed 's~^[0-9.]*:~~' \
         )\" \
         --ttl ${REGISTER_TTL}; \
       /usr/bin/etcdctl \
@@ -148,15 +149,15 @@ ExecStart=/bin/bash -c \
             ${REGISTER_KEY_ROOT}/ports/udp/11211 \
           &> /dev/null; \
         then \
-          echo set; \
+          printf -- 'set\n'; \
         else \
-          echo update; \
+          printf -- 'update\n'; \
         fi) \
         ${REGISTER_KEY_ROOT}/ports/udp/11211 \
         \"$(/usr/bin/docker port \
             {{SERVICE_UNIT_NAME}}.%i \
             11211 \
-          | /usr/bin/sed 's~^[0-9.]*:~~' \
+          | /bin/sed 's~^[0-9.]*:~~' \
         )\" \
         --ttl ${REGISTER_TTL}; \
     fi; \
