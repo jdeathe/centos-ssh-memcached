@@ -1,6 +1,6 @@
-FROM jdeathe/centos-ssh:1.10.0
+FROM jdeathe/centos-ssh:1.10.1
 
-ARG RELEASE_VERSION="1.3.0"
+ARG RELEASE_VERSION="1.3.1"
 
 # ------------------------------------------------------------------------------
 # Base install of required packages
@@ -20,15 +20,11 @@ RUN rpm --rebuilddb \
 # ------------------------------------------------------------------------------
 # Copy files into place
 # ------------------------------------------------------------------------------
-ADD src/etc \
-	/etc/
-ADD src/opt/scmi \
-	/opt/scmi/
-ADD src/usr \
-	/usr/
+ADD src /
 
 # ------------------------------------------------------------------------------
 # Provisioning
+# - Replace placeholders with values in systemd service unit template
 # - Set permissions
 # ------------------------------------------------------------------------------
 RUN sed -i \
@@ -49,7 +45,8 @@ ENV MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER="true" \
 	MEMCACHED_MAXCONN="1024" \
 	MEMCACHED_OPTIONS="-U 0" \
 	SSH_AUTOSTART_SSHD="false" \
-	SSH_AUTOSTART_SSHD_BOOTSTRAP="false"
+	SSH_AUTOSTART_SSHD_BOOTSTRAP="false" \
+	SSH_AUTOSTART_SUPERVISOR_STDOUT="false"
 
 # ------------------------------------------------------------------------------
 # Set image metadata
