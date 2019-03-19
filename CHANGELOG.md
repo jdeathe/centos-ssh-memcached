@@ -14,6 +14,7 @@ CentOS-7 7.5.1804 x86_64 - Memcached 1.4.
 - Adds improvement to pull logic in systemd unit install template.
 - Adds `SSH_AUTOSTART_SUPERVISOR_STDOUT` with a value "false", disabling startup of `supervisor_stdout`.
 - Adds improved `healtchcheck` and `memcached-wrapper` scripts.
+- Adds `docker-compose.yml` to `.dockerignore`.
 
 ### 2.2.0 - 2019-02-12
 
