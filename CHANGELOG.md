@@ -6,6 +6,16 @@ Summary of release changes for Version 2.
 
 CentOS-7 7.5.1804 x86_64 - Memcached 1.4.
 
+### 2.2.1 - 2019-03-20
+
+- Updates source image to [2.5.1](https://github.com/jdeathe/centos-ssh/releases/tag/2.5.1).
+- Updates Dockerfile with combined ADD to reduce layer count in final image.
+- Fixes binary paths in systemd unit files for compatibility with both EL and Ubuntu hosts.
+- Adds improvement to pull logic in systemd unit install template.
+- Adds `SSH_AUTOSTART_SUPERVISOR_STDOUT` with a value "false", disabling startup of `supervisor_stdout`.
+- Adds improved `healtchcheck` and `memcached-wrapper` scripts.
+- Adds `docker-compose.yml` to `.dockerignore`.
+
 ### 2.2.0 - 2019-02-12
 
 - Updates source image to [2.5.0](https://github.com/jdeathe/centos-ssh/releases/tag/2.5.0).
