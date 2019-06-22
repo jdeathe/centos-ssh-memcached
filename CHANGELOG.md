@@ -1,10 +1,15 @@
 # Change Log
 
-## centos-7
+## 2 - centos-7
 
-Summary of release changes for Version 2.
+Summary of release changes.
 
-CentOS-7 7.5.1804 x86_64 - Memcached 1.4.
+### 2.3.0 - Unreleased
+
+- Updates CHANGELOG.md to simplify maintenance.
+- Updates README.md to simplify contents and improve readability.
+- Updates README-short.txt to apply to all image variants.
+- Updates Dockerfile `org.deathe.description` metadata LABEL for consistency.
 
 ### 2.2.1 - 2019-03-20
 
