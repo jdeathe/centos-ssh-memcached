@@ -1,10 +1,15 @@
 # Change Log
 
-## centos-6
+## 1 - centos-6
 
-Summary of release changes for Version 1.
+Summary of release changes.
 
-CentOS-6 6.10 x86_64 - Memcached 1.4.
+### 1.4.0 - Unreleased
+
+- Updates CHANGELOG.md to simplify maintenance.
+- Updates README.md to simplify contents and improve readability.
+- Updates README-short.txt to apply to all image variants.
+- Updates Dockerfile `org.deathe.description` metadata LABEL for consistency.
 
 ### 1.3.1 - 2019-03-20
 
