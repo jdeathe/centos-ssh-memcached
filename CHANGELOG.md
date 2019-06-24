@@ -11,6 +11,7 @@ Summary of release changes.
 - Updates README-short.txt to apply to all image variants.
 - Updates Dockerfile `org.deathe.description` metadata LABEL for consistency.
 - Fixes binary paths in systemd unit files; missing changes from last release.
+- Adds missing instruction step to docker-compose example configuration file.
 
 ### 2.2.1 - 2019-03-20
 
