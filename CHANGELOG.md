@@ -10,6 +10,7 @@ Summary of release changes.
 - Updates README.md to simplify contents and improve readability.
 - Updates README-short.txt to apply to all image variants.
 - Updates Dockerfile `org.deathe.description` metadata LABEL for consistency.
+- Fixes binary paths in systemd unit files; missing changes from last release.
 
 ### 1.3.1 - 2019-03-20
 
