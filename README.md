@@ -9,7 +9,7 @@ This build uses the base image [jdeathe/centos-ssh](https://github.com/jdeathe/c
 
 ### Image variants
 
-- [Memcached 1.4 - CentOS-7]((https://github.com/jdeathe/centos-ssh-memcached/tree/centos-7))
+- [Memcached 1.4 - CentOS-7]((https://github.com/jdeathe/centos-ssh-memcached/tree/centos-7)
 - [Memcached 1.4 - CentOS-6](https://github.com/jdeathe/centos-ssh-memcached/tree/centos-6)
 
 ## Quick start
