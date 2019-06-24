@@ -22,10 +22,11 @@ services:
       context: "."
       dockerfile: "Dockerfile"
     environment:
-      MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER: "true"
+      ENABLE_MEMCACHED_WRAPPER: "true"
       MEMCACHED_CACHESIZE: "${MEMCACHED_CACHESIZE}"
       MEMCACHED_MAXCONN: "${MEMCACHED_MAXCONN}"
       MEMCACHED_OPTIONS: "${MEMCACHED_OPTIONS}"
+      SYSTEM_TIMEZONE: "${SYSTEM_TIMEZONE}"
     image: "jdeathe/centos-ssh-memcached:latest"
     ports:
       - "11211:11211"
