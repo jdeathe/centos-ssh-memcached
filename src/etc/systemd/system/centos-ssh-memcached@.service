@@ -64,6 +64,7 @@ Environment="MEMCACHED_OPTIONS=-U 0"
 Environment="SYSCTL_NET_CORE_SOMAXCONN=1024"
 Environment="SYSCTL_NET_IPV4_IP_LOCAL_PORT_RANGE=1024 65535"
 Environment="SYSCTL_NET_IPV4_ROUTE_FLUSH=1"
+Environment="SYSTEM_TIMEZONE=UTC"
 
 # Initialisation: Load image from local storage if available, otherwise pull.
 ExecStartPre=/bin/bash -c \
@@ -127,6 +128,7 @@ ExecStart=/bin/bash -c \
     --env \"MEMCACHED_CACHESIZE=${MEMCACHED_CACHESIZE}\" \
     --env \"MEMCACHED_MAXCONN=${MEMCACHED_MAXCONN}\" \
     --env \"MEMCACHED_OPTIONS=${MEMCACHED_OPTIONS}\" \
+    --env \"SYSTEM_TIMEZONE=${SYSTEM_TIMEZONE}\" \
     $(if [[ ${DOCKER_PORT_MAP_TCP_11211} != NULL ]]; \
     then \
       if /bin/grep -qE \

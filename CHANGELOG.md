@@ -21,7 +21,7 @@ Summary of release changes.
 - Adds `inspect`, `reload` and `top` Makefile targets.
 - Adds improved `clean` Makefile target; includes exited containers and dangling images.
 - Adds lock/state file to wrapper script.
-- Adds `SYSTEM_TIMEZONE` handling to Makefile, scmi and docker-compose templates.
+- Adds `SYSTEM_TIMEZONE` handling to Makefile, scmi, systemd unit and docker-compose templates.
 - Adds system time zone validation to healthcheck.
 - Removes support for long image tags (i.e. centos-7-2.x.x).
 
