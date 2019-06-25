@@ -4,7 +4,7 @@
 
 Summary of release changes.
 
-### 1.4.0 - Unreleased
+### 1.4.0 - 2019-06-25
 
 - Deprecates `MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER`, replaced with `ENABLE_MEMCACHED_WRAPPER`.
 - Updates source image to [1.11.0](https://github.com/jdeathe/centos-ssh/releases/tag/1.11.0).
