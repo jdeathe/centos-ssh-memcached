@@ -2,30 +2,33 @@
 
 set -e
 
-function __is_valid_memcached_cachesize ()
+function __cleanup ()
 {
-	local -r non_zero_integer='^[1-9][0-9]*$'
-	local -r value="${1}"
-
-	if [[ ${value} =~ ${non_zero_integer} ]]
-	then
-		return 0
-	fi
-
-	return 1
+	__delete_lock
 }
 
-function __is_valid_memcached_maxconn ()
+function __create_lock ()
 {
-	local -r non_zero_integer='^[1-9][0-9]*$'
-	local -r value="${1}"
-
-	if [[ ${value} =~ ${non_zero_integer} ]]
+	if [[ -n ${lock_file} ]]
 	then
-		return 0
+		touch "${lock_file}"
 	fi
+}
 
-	return 1
+function __create_state ()
+{
+	if [[ -n ${state_file} ]]
+	then
+		touch "${state_file}"
+	fi
+}
+
+function __delete_lock ()
+{
+	if [[ -f ${lock_file} ]]
+	then
+		rm -f "${lock_file}"
+	fi
 }
 
 function __get_memcached_cachesize ()
@@ -87,13 +90,66 @@ function __get_options ()
 		"${options}"
 }
 
+function __get_timer_total ()
+{
+	local -r timer_end="$(
+		date -u +%s.%N
+	)"
+	local -r timer_start="${1}"
+
+	if [[ -z ${timer_start} ]] \
+		|| [[ ${timer_start//.} -gt ${timer_end//.} ]]
+	then
+		>&2 printf -- \
+			'ERROR: invalid timer start: %s\n' \
+			"${timer_start}"
+		printf -- \
+			'0.000000'
+	else
+		awk \
+			-v timer_end="${timer_end}" \
+			-v timer_start="${timer_start}" \
+			'BEGIN { print \
+				timer_end - timer_start;
+			}'
+	fi
+}
+
+function __is_valid_memcached_cachesize ()
+{
+	local -r non_zero_integer='^[1-9][0-9]*$'
+	local -r value="${1}"
+
+	if [[ ${value} =~ ${non_zero_integer} ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
+function __is_valid_memcached_maxconn ()
+{
+	local -r non_zero_integer='^[1-9][0-9]*$'
+	local -r value="${1}"
+
+	if [[ ${value} =~ ${non_zero_integer} ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 function main ()
 {
 	local -r bin="/usr/bin/memcached"
+	local -r lock_file="/var/lock/subsys/memcached-wrapper"
 	local -r nice="/bin/nice"
 	local -r niceness="0"
+	local -r state_file="/var/lib/misc/memcached-wrapper"
 	local -r timer_start="$(
-		date +%s.%N
+		date -u +%s.%N
 	)"
 
 	local memcached_cachesize
@@ -101,20 +157,28 @@ function main ()
 	local memcached_options
 	local options
 	local timer_total
-	local verbose=false
+	local verbose="false"
 
-	# Parse options
 	while [[ "${#}" -gt 0 ]]
 	do
 		case "${1}" in
 			-v|--verbose)
-				verbose=true
+				verbose="true"
 				shift 1
 				;;
 		esac
 	done
 
-	if [[ ${verbose} == true ]]
+	if [[ -f ${lock_file} ]]
+	then
+		>&2 printf -- \
+			'ERROR: %s lock detected - aborting.\n' \
+			"${0##*/}"
+		exit 1
+	fi
+
+	if [[ ${verbose} == true ]] \
+		&& [[ ! -f ${state_file} ]]
 	then
 		memcached_cachesize="$(
 			__get_memcached_cachesize
@@ -134,14 +198,8 @@ function main ()
 		)"
 
 		timer_total="$(
-			awk \
-				-v timer_end="$(
-					date +%s.%N
-				)" \
-				-v timer_start="${timer_start}" \
-				'BEGIN { print \
-					timer_end - timer_start;
-				}'
+			__get_timer_total \
+				"${timer_start}"
 		)"
 
 		cat \
@@ -162,6 +220,19 @@ function main ()
 			__get_options
 		)"
 	fi
+
+	if [[ ${verbose} == true ]]
+	then
+		printf -- \
+			'INFO: %s starting %s\n' \
+			"${0##*/}" \
+			"${bin##*/}"
+	fi
+
+	__create_state
+	__cleanup
+	trap - \
+		INT TERM EXIT
 
 	exec ${nice} \
 		-n ${niceness} \
