@@ -57,13 +57,14 @@ Environment="DOCKER_IMAGE_TAG={{RELEASE_VERSION}}"
 Environment="DOCKER_PORT_MAP_TCP_11211=11211"
 Environment="DOCKER_PORT_MAP_UDP_11211=NULL"
 Environment="DOCKER_USER=jdeathe"
-Environment="MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=true"
+Environment="ENABLE_MEMCACHED_WRAPPER=true"
 Environment="MEMCACHED_CACHESIZE=64"
 Environment="MEMCACHED_MAXCONN=1024"
 Environment="MEMCACHED_OPTIONS=-U 0"
 Environment="SYSCTL_NET_CORE_SOMAXCONN=1024"
 Environment="SYSCTL_NET_IPV4_IP_LOCAL_PORT_RANGE=1024 65535"
 Environment="SYSCTL_NET_IPV4_ROUTE_FLUSH=1"
+Environment="SYSTEM_TIMEZONE=UTC"
 
 # Initialisation: Load image from local storage if available, otherwise pull.
 ExecStartPre=/bin/bash -c \
@@ -123,33 +124,34 @@ ExecStart=/bin/bash -c \
     --sysctl \"net.core.somaxconn=${SYSCTL_NET_CORE_SOMAXCONN}\" \
     --sysctl \"net.ipv4.ip_local_port_range=${SYSCTL_NET_IPV4_IP_LOCAL_PORT_RANGE}\" \
     --sysctl \"net.ipv4.route.flush=${SYSCTL_NET_IPV4_ROUTE_FLUSH}\" \
-    --env \"MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=${MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER}\" \
+    --env \"ENABLE_MEMCACHED_WRAPPER=${ENABLE_MEMCACHED_WRAPPER}\" \
     --env \"MEMCACHED_CACHESIZE=${MEMCACHED_CACHESIZE}\" \
     --env \"MEMCACHED_MAXCONN=${MEMCACHED_MAXCONN}\" \
     --env \"MEMCACHED_OPTIONS=${MEMCACHED_OPTIONS}\" \
+    --env \"SYSTEM_TIMEZONE=${SYSTEM_TIMEZONE}\" \
     $(if [[ ${DOCKER_PORT_MAP_TCP_11211} != NULL ]]; \
     then \
-      if /usr/bin/grep -qE \
+      if /bin/grep -qE \
           '^([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:)?[1-9][0-9]*$' \
           <<< \"${DOCKER_PORT_MAP_TCP_11211}\"; \
-        && /usr/bin/grep -qE \
+        && /bin/grep -qE \
           '^.+\.[0-9]+(\.[0-9]+)?$' \
           <<< %p.%i; \
       then \
         printf -- '--publish %%s%%s:11211/tcp' \
           $(\
-            /usr/bin/grep -o \
+            /bin/grep -o \
               '^[0-9\.]*:' \
               <<< \"${DOCKER_PORT_MAP_TCP_11211}\" \
           ) \
           $(( \
             $(\
-              /usr/bin/grep -oE \
+              /bin/grep -oE \
                 '[0-9]+$' \
                 <<< \"${DOCKER_PORT_MAP_TCP_11211}\" \
             ) \
             + $(\
-              /usr/bin/grep -oE \
+              /bin/grep -oE \
                 '^[0-9]+' \
                 <<< %i \
             ) \
@@ -162,27 +164,27 @@ ExecStart=/bin/bash -c \
     fi) \
     $(if [[ ${DOCKER_PORT_MAP_UDP_11211} != NULL ]]; \
     then \
-      if /usr/bin/grep -qE \
+      if /bin/grep -qE \
           '^([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:)?[1-9][0-9]*$' \
           <<< \"${DOCKER_PORT_MAP_UDP_11211}\"; \
-        && /usr/bin/grep -qE \
+        && /bin/grep -qE \
           '^.+\.[0-9]+(\.[0-9]+)?$' \
           <<< %p.%i; \
       then \
         printf -- '--publish %%s%%s:11211/udp' \
           $(\
-            /usr/bin/grep -o \
+            /bin/grep -o \
               '^[0-9\.]*:' \
               <<< \"${DOCKER_PORT_MAP_UDP_11211}\" \
           ) \
           $(( \
             $(\
-              /usr/bin/grep -oE \
+              /bin/grep -oE \
                 '[0-9]+$' \
                 <<< \"${DOCKER_PORT_MAP_UDP_11211}\" \
             ) \
             + $(\
-              /usr/bin/grep -oE \
+              /bin/grep -oE \
                 '^[0-9]+' \
                 <<< %i \
             ) \
