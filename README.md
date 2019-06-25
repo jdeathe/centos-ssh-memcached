@@ -1,7 +1,7 @@
 ## Tags and respective `Dockerfile` links
 
-- `centos-7`,[`2.2.1`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/2.2.1) [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-7/Dockerfile)
-- `centos-6`,[`1.3.1`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/1.3.1) [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-6/Dockerfile)
+- `centos-7`,[`2.3.0`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/2.3.0) [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-7/Dockerfile)
+- `centos-6`,[`1.4.0`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/1.4.0) [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-6/Dockerfile)
 
 ## Overview
 
@@ -9,7 +9,7 @@ This build uses the base image [jdeathe/centos-ssh](https://github.com/jdeathe/c
 
 ### Image variants
 
-- [Memcached 1.4 - CentOS-7]((https://github.com/jdeathe/centos-ssh-memcached/tree/centos-7)
+- [Memcached 1.4 - CentOS-7](https://github.com/jdeathe/centos-ssh-memcached/tree/centos-7)
 - [Memcached 1.4 - CentOS-6](https://github.com/jdeathe/centos-ssh-memcached/tree/centos-6)
 
 ## Quick start
@@ -23,7 +23,7 @@ $ docker run -d \
   --name memcached.1 \
   -p 11211:11211/tcp \
   --sysctl "net.core.somaxconn=1024" \
-  jdeathe/centos-ssh-memcached:2.2.1
+  jdeathe/centos-ssh-memcached:2.3.0
 ```
 
 Verify the named container's process status and health.
@@ -70,7 +70,7 @@ $ docker stop memcached.1 && \
   --sysctl "net.ipv4.ip_local_port_range=1024 65535" \
   --sysctl "net.ipv4.route.flush=1" \
   --env "MEMCACHED_CACHESIZE=32" \
-  jdeathe/centos-ssh-memcached:2.2.1
+  jdeathe/centos-ssh-memcached:2.3.0
 ```
 
 ### Environment variables
