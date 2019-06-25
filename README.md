@@ -1,7 +1,7 @@
 ## Tags and respective `Dockerfile` links
 
-- `centos-7`,`centos-7-2.2.1`,[`2.2.1`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/2.2.1) [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-7/Dockerfile)
-- `centos-6`,`centos-6-1.3.1`,[`1.3.1`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/1.3.1) [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-6/Dockerfile)
+- `centos-7`,[`2.2.1`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/2.2.1) [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-7/Dockerfile)
+- `centos-6`,[`1.3.1`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/1.3.1) [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-6/Dockerfile)
 
 ## Overview
 
@@ -77,9 +77,9 @@ $ docker stop memcached.1 && \
 
 Environment variables are available, as detailed below, to allow the operator to configure a container on run. Environment variable values cannot be changed after running the container; it's a one-shot type setting. If you need to change a value you have to terminate, (i.e stop and remove), and replace the running container.
 
-#### MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER
+#### ENABLE_MEMCACHED_WRAPPER
 
-It may be desirable to prevent the startup of the memcached-wrapper script. For example, when using an image built from this Dockerfile as the source for another Dockerfile you could disable memcached from startup by setting `MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER` to `false`. The benefit of this is to reduce the number of running processes in the final container. Another use for this would be to make use of the packages installed in the image such as `memcached-tool` or the libmemcached tools `memcp`, `memcat`, `memrm` and `memflush`; effectively making the container a Memcached client.
+It may be desirable to prevent the startup of the memcached-wrapper script. For example, when using an image built from this Dockerfile as the source for another Dockerfile you could disable memcached from startup by setting `ENABLE_MEMCACHED_WRAPPER` to `false`. The benefit of this is to reduce the number of running processes in the final container. Another use for this would be to make use of the packages installed in the image such as `memcached-tool` or the libmemcached tools `memcp`, `memcat`, `memrm` and `memflush`; effectively making the container a Memcached client.
 
 #### MEMCACHED_CACHESIZE
 

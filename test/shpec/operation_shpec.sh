@@ -400,7 +400,7 @@ function test_custom_configuration ()
 					--name memcached.2 \
 					--network-alias memcached.2 \
 					--network ${private_network_1} \
-					--env MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=false \
+					--env ENABLE_MEMCACHED_WRAPPER=false \
 					jdeathe/centos-ssh-memcached:latest \
 				&> /dev/null
 
@@ -507,7 +507,7 @@ function test_custom_configuration ()
 		docker run \
 			--detach \
 			--name memcached.1 \
-			--env MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=false \
+			--env ENABLE_MEMCACHED_WRAPPER=false \
 			jdeathe/centos-ssh-memcached:latest \
 		&> /dev/null
 
