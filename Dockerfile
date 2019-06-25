@@ -1,4 +1,4 @@
-FROM jdeathe/centos-ssh:2.5.1
+FROM jdeathe/centos-ssh:2.6.0
 
 ARG RELEASE_VERSION="2.2.1"
 
@@ -31,7 +31,7 @@ RUN sed -i \
 		-e "s~{{RELEASE_VERSION}}~${RELEASE_VERSION}~g" \
 		/etc/systemd/system/centos-ssh-memcached@.service \
 	&& chmod 644 \
-		/etc/supervisord.d/memcached-wrapper.conf \
+		/etc/supervisord.d/50-memcached-wrapper.conf \
 	&& chmod 700 \
 		/usr/{bin/healthcheck,sbin/memcached-wrapper}
 
@@ -40,13 +40,14 @@ EXPOSE 11211
 # ------------------------------------------------------------------------------
 # Set default environment variables
 # ------------------------------------------------------------------------------
-ENV MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER="true" \
+ENV \
+	ENABLE_MEMCACHED_WRAPPER="true" \
+	ENABLE_SSHD_BOOTSTRAP="false" \
+	ENABLE_SSHD_WRAPPER="false" \
+	ENABLE_SUPERVISOR_STDOUT="false" \
 	MEMCACHED_CACHESIZE="64" \
 	MEMCACHED_MAXCONN="1024" \
-	MEMCACHED_OPTIONS="-U 0" \
-	SSH_AUTOSTART_SSHD="false" \
-	SSH_AUTOSTART_SSHD_BOOTSTRAP="false" \
-	SSH_AUTOSTART_SUPERVISOR_STDOUT="false"
+	MEMCACHED_OPTIONS="-U 0"
 
 # ------------------------------------------------------------------------------
 # Set image metadata
