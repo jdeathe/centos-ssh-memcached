@@ -78,7 +78,7 @@ jdeathe/centos-ssh-memcached:${RELEASE_VERSION} \
 	org.deathe.license="MIT" \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-memcached" \
-	org.deathe.description="Memcached 1.4 - CentOS-7 7.5.1804 x86_64."
+	org.deathe.description="Memcached 1.4 - CentOS-7 7.6.1810 x86_64."
 
 HEALTHCHECK \
 	--interval=1s \
