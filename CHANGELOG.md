@@ -7,6 +7,7 @@ Summary of release changes.
 ### 2.3.1 - Unreleased
 
 - Updates `memcached-wrapper`; reduced function duplication.
+- Fixes lock/state file handling in `memcached-wrapper`.
 - Fixes CentOS-7 version in Dockerfile `org.deathe.description` metadata.
 
 ### 2.3.0 - 2019-06-25
