@@ -117,18 +117,15 @@ function __get_timer_total ()
 
 function __is_valid_memcached_cachesize ()
 {
-	local -r non_zero_integer='^[1-9][0-9]*$'
-	local -r value="${1}"
-
-	if [[ ${value} =~ ${non_zero_integer} ]]
-	then
-		return 0
-	fi
-
-	return 1
+	__is_valid_non_zero_integer "${@}"
 }
 
 function __is_valid_memcached_maxconn ()
+{
+	__is_valid_non_zero_integer "${@}"
+}
+
+function __is_valid_non_zero_integer ()
 {
 	local -r non_zero_integer='^[1-9][0-9]*$'
 	local -r value="${1}"
@@ -169,6 +166,17 @@ function main ()
 		esac
 	done
 
+	if [[ -f ${state_file} ]]
+	then
+		if [[ ${verbose} == true ]]
+		then
+			printf -- \
+				'INFO: %s finished - skipping.\n' \
+				"${0##*/}"
+		fi
+		exit 0
+	fi
+
 	if [[ -f ${lock_file} ]]
 	then
 		>&2 printf -- \
@@ -176,6 +184,10 @@ function main ()
 			"${0##*/}"
 		exit 1
 	fi
+
+	trap "__cleanup" \
+		INT TERM EXIT
+	__create_lock
 
 	if [[ ${verbose} == true ]] \
 		&& [[ ! -f ${state_file} ]]
