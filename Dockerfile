@@ -1,12 +1,11 @@
-FROM jdeathe/centos-ssh:1.11.0
+FROM jdeathe/centos-ssh:1.11.1
 
 ARG RELEASE_VERSION="1.4.0"
 
 # ------------------------------------------------------------------------------
 # Base install of required packages
 # ------------------------------------------------------------------------------
-RUN rpm --rebuilddb \
-	&& yum -y install \
+RUN yum -y install \
 			--setopt=tsflags=nodocs \
 			--disableplugin=fastestmirror \
 		libmemcached-0.31-1.1.el6 \
@@ -44,7 +43,6 @@ ENV \
 	ENABLE_MEMCACHED_WRAPPER="true" \
 	ENABLE_SSHD_BOOTSTRAP="false" \
 	ENABLE_SSHD_WRAPPER="false" \
-	ENABLE_SUPERVISOR_STDOUT="false" \
 	MEMCACHED_CACHESIZE="64" \
 	MEMCACHED_MAXCONN="1024" \
 	MEMCACHED_OPTIONS="-U 0"
