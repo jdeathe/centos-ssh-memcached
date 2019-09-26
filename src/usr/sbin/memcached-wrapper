@@ -176,17 +176,6 @@ function main ()
 		esac
 	done
 
-	if [[ -f ${state_file} ]]
-	then
-		if [[ ${verbose} == true ]]
-		then
-			printf -- \
-				'INFO: %s finished - skipping\n' \
-				"${0##*/}"
-		fi
-		exit 0
-	fi
-
 	if [[ -f ${lock_file} ]]
 	then
 		>&2 printf -- \

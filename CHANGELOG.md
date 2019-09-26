@@ -19,7 +19,7 @@ Summary of release changes.
 - Adds Makefile target `logsdef` to handle deferred logs output within a target chain.
 - Adds exec proxy function to `memcached-wrapper` used to pass through nice.
 - Adds `/docs` directory for supplementary documentation.
-- Fixes lock/state file handling in `memcached-wrapper`.
+- Fixes lock file handling in `memcached-wrapper`.
 - Fixes validation failure of 0 second --timeout value in `test/health_status`.
 - Removes `ENABLE_MEMCACHED_WRAPPER` from docker-compose example configuration.
 
