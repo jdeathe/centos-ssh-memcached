@@ -47,16 +47,16 @@ function main ()
 		| grep -qE '^/usr/bin/python /usr/bin/supervisord'
 	then
 		>&2 printf -- \
-			'%s\n' \
-			"supervisord not running."
+			'%s' \
+			"supervisord not running"
 		exit 1
 	fi
 
 	if [[ ${system_timezone} != "${zone}" ]]
 	then
 		>&2 printf -- \
-			'%s\n' \
-			"system-timezone zone mismatch."
+			'%s' \
+			"system-timezone zone mismatch"
 		exit 1
 	fi
 
@@ -66,8 +66,8 @@ function main ()
 			| grep -qE '^/usr/bin/memcached '
 		then
 			>&2 printf -- \
-				'%s\n' \
-				"memcached not running."
+				'%s' \
+				"memcached not running"
 			exit 1
 		fi
 
@@ -78,8 +78,8 @@ function main ()
 				'[ ]+accepting_conns[ ]+1[^0-9]*$'
 		then
 			>&2 printf -- \
-				'%s\n' \
-				"memcached not accepting connections."
+				'%s' \
+				"memcached not accepting connections"
 			exit 1
 		fi
 	fi
