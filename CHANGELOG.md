@@ -4,6 +4,11 @@
 
 Summary of release changes.
 
+### 1.4.1 - Unreleased
+
+- Updates `memcached-wrapper`; reduced function duplication.
+- Fixes lock/state file handling in `memcached-wrapper`.
+
 ### 1.4.0 - 2019-06-25
 
 - Deprecates `MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER`, replaced with `ENABLE_MEMCACHED_WRAPPER`.
