@@ -4,6 +4,10 @@
 
 Summary of release changes.
 
+### 2.3.1 - Unreleased
+
+- Fixes CentOS-7 version in Dockerfile `org.deathe.description` metadata.
+
 ### 2.3.0 - 2019-06-25
 
 - Deprecates `MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER`, replaced with `ENABLE_MEMCACHED_WRAPPER`.
