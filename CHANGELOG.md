@@ -11,7 +11,6 @@ Summary of release changes.
 - Updates `memcached-wrapper`; reduced function duplication.
 - Updates `test/health_status` helper script with for consistency.
 - Updates Makefile target `logs` to accept `[OPTIONS]` (e.g `make -- logs -ft`).
-- Updates `healthcheck` script; state file existence confirms bootstrap completion.
 - Updates info/error output for consistency.
 - Updates healthcheck failure messages to remove EOL character that is rendered in status response.
 - Updates ordering of Tags and respective Dockerfile links in README.md for readability.
