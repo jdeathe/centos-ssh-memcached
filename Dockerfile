@@ -1,12 +1,11 @@
-FROM jdeathe/centos-ssh:2.6.0
+FROM jdeathe/centos-ssh:2.6.1
 
-ARG RELEASE_VERSION="2.3.0"
+ARG RELEASE_VERSION="2.3.1"
 
 # ------------------------------------------------------------------------------
 # Base install of required packages
 # ------------------------------------------------------------------------------
-RUN rpm --rebuilddb \
-	&& yum -y install \
+RUN yum -y install \
 			--setopt=tsflags=nodocs \
 			--disableplugin=fastestmirror \
 		libmemcached-1.0.16-5.el7 \
@@ -44,7 +43,6 @@ ENV \
 	ENABLE_MEMCACHED_WRAPPER="true" \
 	ENABLE_SSHD_BOOTSTRAP="false" \
 	ENABLE_SSHD_WRAPPER="false" \
-	ENABLE_SUPERVISOR_STDOUT="false" \
 	MEMCACHED_CACHESIZE="64" \
 	MEMCACHED_MAXCONN="1024" \
 	MEMCACHED_OPTIONS="-U 0"
@@ -78,7 +76,7 @@ jdeathe/centos-ssh-memcached:${RELEASE_VERSION} \
 	org.deathe.license="MIT" \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-memcached" \
-	org.deathe.description="Memcached 1.4 - CentOS-7 7.5.1804 x86_64."
+	org.deathe.description="Memcached 1.4 - CentOS-7 7.6.1810 x86_64."
 
 HEALTHCHECK \
 	--interval=1s \
