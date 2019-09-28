@@ -1,7 +1,7 @@
 ## Tags and respective `Dockerfile` links
 
-- `centos-7`,[`2.3.0`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/2.3.0) [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-7/Dockerfile)
-- `centos-6`,[`1.4.0`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/1.4.0) [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-6/Dockerfile)
+- [`2.3.1`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/2.3.1),`centos-7` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-7/Dockerfile)
+- [`1.4.1`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/1.4.0),`centos-6` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-6/Dockerfile)
 
 ## Overview
 
@@ -33,7 +33,7 @@ $ docker ps -a \
 	-f "name=memcached.1"
 ```
 
-Verify successful initiallisation of the named container.
+Verify successful initialisation of the named container.
 
 ```
 $ docker logs memcached.1
@@ -61,7 +61,7 @@ In the following example the `memcached` service is bound to port `11211` of the
 
 ```
 $ docker stop memcached.1 && \
-  docker rm memcached.1 && \
+  docker rm memcached.1; \
   docker run \
   --detach \
   --name memcached.1 \
