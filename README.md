@@ -1,6 +1,6 @@
 ## Tags and respective `Dockerfile` links
 
-- [`2.3.0`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/2.3.0),`centos-7` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-7/Dockerfile)
+- [`2.3.1`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/2.3.1),`centos-7` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-7/Dockerfile)
 - [`1.4.0`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/1.4.0),`centos-6` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-6/Dockerfile)
 
 ## Overview
@@ -23,7 +23,7 @@ $ docker run -d \
   --name memcached.1 \
   -p 11211:11211/tcp \
   --sysctl "net.core.somaxconn=1024" \
-  jdeathe/centos-ssh-memcached:2.3.0
+  jdeathe/centos-ssh-memcached:2.3.1
 ```
 
 Verify the named container's process status and health.
@@ -70,7 +70,7 @@ $ docker stop memcached.1 && \
   --sysctl "net.ipv4.ip_local_port_range=1024 65535" \
   --sysctl "net.ipv4.route.flush=1" \
   --env "MEMCACHED_CACHESIZE=32" \
-  jdeathe/centos-ssh-memcached:2.3.0
+  jdeathe/centos-ssh-memcached:2.3.1
 ```
 
 ### Environment variables
