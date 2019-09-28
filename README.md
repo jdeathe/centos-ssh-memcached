@@ -1,7 +1,7 @@
 ## Tags and respective `Dockerfile` links
 
-- [`2.3.0`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/2.3.0),`centos-7` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-7/Dockerfile)
-- [`1.4.0`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/1.4.0),`centos-6` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-6/Dockerfile)
+- [`2.3.1`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/2.3.1),`centos-7` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-7/Dockerfile)
+- [`1.4.1`](https://github.com/jdeathe/centos-ssh-memcached/releases/tag/1.4.0),`centos-6` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-memcached/blob/centos-6/Dockerfile)
 
 ## Overview
 
